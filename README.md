@@ -87,14 +87,14 @@ Gruvbox Studio is the desktop application in the Gruvbox project: an Electron ap
 
 ## Quick start
 
-**Requirements:** Node.js 20+, npm, and an [OpenRouter API key](https://openrouter.ai/keys).
+**Requirements:** Node.js 20+, npm, [Rust](https://rustup.rs/) (for the native file-ops addon), and an [OpenRouter API key](https://openrouter.ai/keys).
 
 ```bash
 git clone git@github.com:kubernao/Gruvbox_studio.git
 cd Gruvbox_studio
 git submodule update --init --recursive
 npm install
-npm run build:pi
+npm run build:prepare   # build:pi (Gruvie) + build:rust (file ops)
 npm start
 ```
 
@@ -144,7 +144,7 @@ npm run test          # Playwright e2e (after npm install)
 npm run qa:fast       # Quick CI-style gate
 ```
 
-Initialize submodules after clone. If Gruvie reports “Pi CLI not found”, run `npm run build:pi` again.
+Initialize submodules after clone. If Gruvie reports “Pi CLI not found”, run `npm run build:pi` again. If file operations log a missing native addon, run `npm run build:rust` (or `npm run build:prepare`).
 
 ## Documentation
 
@@ -161,4 +161,8 @@ We welcome focused improvements—bug fixes, docs, tests, and features that matc
 
 ## License
 
-MIT — see [LICENSE](../LICENSE) when using a full Gruvbox monorepo checkout. This repository is licensed under the same terms as the Gruvbox project.
+Gruvbox Studio is free software licensed under the **[GNU General Public License v3.0 or later](LICENSE)** (GPL-3.0-or-later).
+
+Copyright © 2026 Gruvbox contributors.
+
+If you distribute this software or derivative works, you must provide corresponding source under the same license. See [LICENSE](LICENSE) for the full terms.
