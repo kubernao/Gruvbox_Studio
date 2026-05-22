@@ -1,0 +1,1363 @@
+/**
+ * DiffViewer - Comprehensive styling for the diff viewer component
+ * Based on Vue SFC styling, converted to CSS with class-based selectors
+ */
+
+.diff-viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  width: 100%;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  /* Save buffer: mirror EditorPane document `.cm-editor` (EditorPane.css). */
+  --diff-save-buffer-bg: var(--bg-editor-surround);
+  --diff-save-buffer-border: var(--accent-highlight);
+  /* Same width as `.markdown-codemirror-root > .cm-editor` / `.code-codemirror-root .cm-editor`. */
+  --diff-save-buffer-border-width: 1px;
+}
+
+/* Force diff-view chrome to app background; Monaco is separate so merge buffer borders stay visible. */
+.diff-viewer,
+.diff-viewer .diff-card,
+.diff-viewer .diff-toolbar,
+.diff-viewer .diff-status-message,
+.diff-viewer .diff-main-layout--monaco,
+.diff-viewer .meld-diff-shell,
+.diff-viewer .meld-diff-panes-header,
+.diff-viewer .meld-diff-body,
+.diff-viewer .meld-diff-editor-slot,
+.diff-viewer .monaco-diff-editor-host,
+.diff-viewer .monaco-merge-shell,
+.diff-viewer .monaco-merge-header,
+.diff-viewer .monaco-merge-body,
+.diff-viewer .monaco-merge-pane-slot,
+.diff-viewer .diff-monaco-placeholder {
+  background: var(--bg) !important;
+  border-color: var(--bg) !important;
+}
+
+.diff-viewer .monaco-diff-editor,
+.diff-viewer .monaco-editor,
+.diff-viewer .monaco-editor-background,
+.diff-viewer .monaco-editor .margin,
+.diff-viewer .monaco-editor .monaco-editor-background {
+  background: var(--bg) !important;
+}
+
+/* --- Monaco diff editor --- */
+.diff-main-layout--monaco {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Meld-style chrome: three-pane header + ribbon overlay (see MonacoDiffEditor). */
+.meld-diff-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.meld-diff-panes-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-default);
+  background: color-mix(in srgb, var(--bg-primary) 92%, var(--border-default));
+}
+
+.meld-diff-pane-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meld-diff-pane-title--left {
+  text-align: left;
+}
+
+.meld-diff-pane-title--center {
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.82;
+  max-width: min(40vw, 220px);
+}
+
+.meld-diff-pane-title--right {
+  text-align: right;
+}
+
+.meld-diff-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Merge save-buffer: slight gap below pane titles so rounded frame does not butt square header. */
+.diff-viewer .meld-diff-shell--merge .meld-diff-body,
+.diff-viewer .monaco-merge-shell--merge .monaco-merge-body {
+  padding-top: 2px;
+  box-sizing: border-box;
+}
+
+.monaco-hunk-controls-lane {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 12.5px);
+  width: 25px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.monaco-hunk-control-group {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.monaco-hunk-btn {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--bg);
+  border-radius: 3px;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.monaco-hunk-btn:hover {
+  opacity: 0.88;
+}
+
+.monaco-hunk-btn-apply-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.monaco-hunk-arrow {
+  display: inline-block;
+  line-height: 1;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.monaco-hunk-arrow--right {
+  transform: translateX(0.5px);
+}
+
+.monaco-hunk-arrow--left {
+  transform: translateX(-0.5px);
+}
+
+.meld-diff-editor-slot {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Match Monaco pane backgrounds to the app background token. */
+.meld-diff-editor-slot,
+.meld-diff-editor-slot .monaco-diff-editor,
+.meld-diff-editor-slot .monaco-editor,
+.meld-diff-editor-slot .monaco-editor-background,
+.monaco-merge-pane-slot,
+.monaco-merge-pane-slot .monaco-editor,
+.monaco-merge-pane-slot .monaco-editor-background {
+  background: var(--bg) !important;
+}
+
+/* Monaco split diff: carve out a true empty center lane for ribbons. */
+.meld-diff-editor-slot .monaco-diff-editor.side-by-side .editor.original {
+  width: calc(50% - 12.5px) !important;
+}
+
+.meld-diff-editor-slot .monaco-diff-editor.side-by-side .editor.modified {
+  left: calc(50% + 12.5px) !important;
+  width: calc(50% - 12.5px) !important;
+}
+
+/* Keep any nested scroll layer aligned with the modified pane shift. */
+.meld-diff-editor-slot .monaco-diff-editor.side-by-side .monaco-scrollable-element.modified-in-monaco-diff-editor {
+  left: calc(50% + 12.5px) !important;
+  width: calc(50% - 12.5px) !important;
+}
+
+.meld-diff-ribbon-svg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.monaco-diff-editor-host {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.monaco-merge-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.monaco-merge-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 25px;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-default);
+  background: color-mix(in srgb, var(--bg-primary) 92%, var(--border-default));
+}
+
+.monaco-merge-pane-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monaco-merge-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 25px minmax(0, 1fr) 25px minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+}
+
+.monaco-merge-pane-slot {
+  min-width: 0;
+  min-height: 0;
+}
+
+.monaco-merge-pane-slot-left { grid-column: 1; }
+.monaco-merge-pane-slot-base { grid-column: 3; }
+.monaco-merge-pane-slot-right { grid-column: 5; }
+
+/* Dual-AI: three reference columns + merge result row */
+.monaco-merge-shell--triple-ai {
+  flex: 1;
+  min-height: 0;
+}
+
+.monaco-merge-triple-variant-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-default);
+  background: color-mix(in srgb, var(--bg-primary) 92%, var(--border-default));
+}
+
+.monaco-merge-triple-variant-label {
+  margin-right: 4px;
+}
+
+.monaco-merge-variant-btn {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.monaco-merge-variant-btn.is-active {
+  border-color: var(--accent-highlight);
+  color: var(--text-primary);
+}
+
+.monaco-merge-triple-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 10px;
+  flex: 1;
+  min-height: 0;
+  padding: 4px 8px 8px;
+  box-sizing: border-box;
+}
+
+.monaco-merge-triple-center {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+.monaco-merge-pane-slot-base-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.monaco-merge-controls-lane {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 100%;
+  pointer-events: none;
+}
+
+.monaco-merge-triple-center .monaco-merge-pane-slot-result {
+  height: 100%;
+}
+
+.monaco-triple-diff-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.monaco-triple-diff-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-default);
+  background: color-mix(in srgb, var(--bg-primary) 92%, var(--border-default));
+}
+
+.monaco-triple-diff-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 10px;
+  flex: 1;
+  min-height: 0;
+  padding: 4px 8px 8px;
+}
+
+.monaco-triple-diff-column {
+  min-width: 0;
+  min-height: 0;
+}
+
+.monaco-triple-diff-host {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.diff-viewer .monaco-triple-diff-shell--merge .monaco-triple-diff-column:first-child .editor.modified {
+  --vscode-editor-background: var(--diff-save-buffer-bg) !important;
+  --vscode-editorGutter-background: var(--diff-save-buffer-bg) !important;
+  box-sizing: border-box !important;
+  border-radius: 6px;
+  background-color: var(--diff-save-buffer-bg) !important;
+  border: var(--diff-save-buffer-border-width) solid var(--diff-save-buffer-border) !important;
+  padding: var(--diff-save-buffer-border-width);
+}
+
+.monaco-triple-diff-controls {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: calc(100% - 12px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.diff-viewer .monaco-merge-shell--triple-ai.monaco-merge-shell--merge .monaco-merge-pane-slot-result {
+  --vscode-editor-background: var(--diff-save-buffer-bg) !important;
+  --vscode-editorGutter-background: var(--diff-save-buffer-bg) !important;
+  box-sizing: border-box;
+  padding: var(--diff-save-buffer-border-width);
+  border-radius: 6px;
+  background-color: var(--diff-save-buffer-bg) !important;
+  border: var(--diff-save-buffer-border-width) solid var(--diff-save-buffer-border) !important;
+  overflow: hidden;
+}
+
+.diff-viewer .monaco-merge-shell--triple-ai.monaco-merge-shell--merge .monaco-merge-pane-slot-result .monaco-editor {
+  --vscode-editor-background: var(--diff-save-buffer-bg) !important;
+  background-color: var(--diff-save-buffer-bg) !important;
+}
+
+/*
+ * Keep legacy selectors neutralized after moving to single-row triple layout.
+ * This avoids stale class usage from creating unintended layout shifts.
+ */
+.monaco-merge-triple-bottom,
+.monaco-merge-triple-result-title,
+.monaco-merge-triple-bottom-inner {
+  display: flex;
+  min-height: 0;
+}
+
+.monaco-merge-pane-slot-result {
+  min-width: 0;
+  min-height: 0;
+}
+
+.monaco-hunk-control-group--triple {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 96px;
+}
+
+.monaco-hunk-btn-apply {
+  font-size: 11px;
+  width: auto;
+  min-width: 118px;
+  padding: 4px 10px;
+  min-height: 28px;
+  border-radius: 4px;
+}
+
+.monaco-hunk-control-group--triple .monaco-hunk-btn-apply {
+  width: auto;
+  min-width: 118px;
+  border-radius: 4px;
+  min-height: 28px;
+}
+
+.diff-viewer .monaco-merge-shell--triple-ai .monaco-merge-pane-slot-result .monaco-merge-line-diff {
+  background: color-mix(in srgb, var(--yellow) 16%, transparent) !important;
+}
+
+.diff-viewer .monaco-merge-shell--triple-ai .monaco-merge-side-diff-active {
+  background: color-mix(in srgb, var(--blue) 14%, transparent) !important;
+}
+
+.diff-viewer .monaco-merge-shell--triple-ai .monaco-merge-side-diff-inactive {
+  background: color-mix(in srgb, var(--bg2) 35%, transparent) !important;
+}
+
+/*
+ * Save buffer (merge): match CodeMirror document chrome + full accent border (1px, EditorPane).
+ * Monaco paints via `background-color: var(--vscode-editor-background)`; gutter uses
+ * `--vscode-editorGutter-background`. Frame lives on the pane host only — not on `.margin`
+ * (glyph / +/- lane) so that column does not get its own box.
+ */
+.diff-viewer .meld-diff-shell--merge .meld-diff-editor-slot {
+  box-sizing: border-box;
+  /* Prevents outer 1px border from sitting flush against overflow clipping. */
+  padding: var(--diff-save-buffer-border-width);
+}
+
+/* Remove the decorative vertical rule in the narrow gutter between original/modified. */
+.diff-viewer .meld-diff-shell--merge .monaco-diff-editor.side-by-side .gutter .gutterItem .background {
+  border: none !important;
+  border-left: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+}
+
+.diff-viewer .meld-diff-shell--merge .meld-diff-editor-slot .monaco-diff-editor.side-by-side .editor.modified {
+  --vscode-editor-background: var(--diff-save-buffer-bg) !important;
+  --vscode-editorGutter-background: var(--diff-save-buffer-bg) !important;
+  box-sizing: border-box !important;
+  border-radius: 6px;
+  background-color: var(--diff-save-buffer-bg) !important;
+  border: var(--diff-save-buffer-border-width) solid var(--diff-save-buffer-border) !important;
+  border-color: var(--diff-save-buffer-border) !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+  /* Inset Monaco so inner layers cannot paint over the 1px accent ring (fixes corners + right edge). */
+  padding: var(--diff-save-buffer-border-width);
+}
+
+.diff-viewer .meld-diff-shell--merge .meld-diff-editor-slot .monaco-diff-editor.side-by-side .editor.modified .monaco-editor {
+  --vscode-editor-background: var(--diff-save-buffer-bg) !important;
+  --vscode-editorGutter-background: var(--diff-save-buffer-bg) !important;
+  background-color: var(--diff-save-buffer-bg) !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+}
+
+.diff-viewer .meld-diff-shell--merge .meld-diff-editor-slot .monaco-diff-editor.side-by-side .editor.modified .monaco-editor-background,
+.diff-viewer .meld-diff-shell--merge .meld-diff-editor-slot .monaco-diff-editor.side-by-side .editor.modified .monaco-editor .margin,
+.diff-viewer .meld-diff-shell--merge .meld-diff-editor-slot .monaco-diff-editor.side-by-side .editor.modified .monaco-editor .glyph-margin {
+  --vscode-editor-background: var(--diff-save-buffer-bg) !important;
+  --vscode-editorGutter-background: var(--diff-save-buffer-bg) !important;
+  background-color: var(--diff-save-buffer-bg) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.diff-viewer .monaco-merge-shell--merge:not(.monaco-merge-shell--triple-ai) .monaco-merge-pane-slot-left {
+  --vscode-editor-background: var(--diff-save-buffer-bg) !important;
+  --vscode-editorGutter-background: var(--diff-save-buffer-bg) !important;
+  box-sizing: border-box;
+  padding: var(--diff-save-buffer-border-width);
+  border-radius: 6px;
+  background-color: var(--diff-save-buffer-bg) !important;
+  border: var(--diff-save-buffer-border-width) solid var(--diff-save-buffer-border) !important;
+  border-color: var(--diff-save-buffer-border) !important;
+  overflow: hidden;
+}
+
+.diff-viewer .monaco-merge-shell--merge:not(.monaco-merge-shell--triple-ai) .monaco-merge-pane-slot-left .monaco-editor {
+  --vscode-editor-background: var(--diff-save-buffer-bg) !important;
+  --vscode-editorGutter-background: var(--diff-save-buffer-bg) !important;
+  background-color: var(--diff-save-buffer-bg) !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+}
+
+.diff-viewer .monaco-merge-shell--merge:not(.monaco-merge-shell--triple-ai) .monaco-merge-pane-slot-left .monaco-editor-background,
+.diff-viewer .monaco-merge-shell--merge:not(.monaco-merge-shell--triple-ai) .monaco-merge-pane-slot-left .monaco-editor .margin,
+.diff-viewer .monaco-merge-shell--merge:not(.monaco-merge-shell--triple-ai) .monaco-merge-pane-slot-left .monaco-editor .glyph-margin {
+  --vscode-editor-background: var(--diff-save-buffer-bg) !important;
+  --vscode-editorGutter-background: var(--diff-save-buffer-bg) !important;
+  background-color: var(--diff-save-buffer-bg) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.diff-monaco-placeholder {
+  flex: 1;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.diff-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* --- Branch merge modal (merge into branch) --- */
+.diff-branch-compare-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 12px 12px;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--bg-primary) 55%, transparent);
+}
+
+.diff-branch-compare-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 85%, transparent);
+  background: var(--bg-primary);
+  box-shadow: 0 14px 36px color-mix(in srgb, #000 34%, transparent);
+}
+
+.diff-branch-compare-intro {
+  margin: 0 0 8px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+}
+
+.diff-branch-compare-error {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--red, #fb4934);
+  font-family: var(--font-ui);
+}
+
+.diff-branch-compare-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 8px 0 4px;
+  font-family: var(--font-ui);
+}
+
+.diff-branch-compare-select {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 88%, transparent);
+  background: color-mix(in srgb, var(--bg-primary) 84%, var(--bg-secondary));
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  box-sizing: border-box;
+}
+
+.diff-branch-compare-select:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--border-default) 92%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--bg-secondary) 70%, transparent);
+}
+
+.diff-branch-compare-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.diff-branch-compare-primary {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-button);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+.diff-branch-compare-primary:hover:not(:disabled) {
+  background: var(--bg-button-hover);
+}
+
+.diff-branch-compare-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.diff-branch-compare-cancel {
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+.diff-branch-compare-cancel:hover:not(:disabled) {
+  background: var(--bg-button-hover);
+}
+
+/* --- Toolbar --- */
+.diff-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--bg-toolbar);
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+}
+
+.diff-toolbar-left-stack {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 12px;
+}
+
+.diff-toolbar-headline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.diff-toolbar-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.diff-merge-queue-label {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.diff-merge-file-nav .diff-merge-file-counter {
+  min-width: 5.5rem;
+  text-align: center;
+}
+
+.diff-toolbar-title-row h2 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.diff-merge-unresolved-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.diff-unresolved-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  background: color-mix(in srgb, var(--yellow) 14%, transparent);
+  color: var(--yellow-dim);
+  border: 1px solid color-mix(in srgb, var(--yellow) 35%, transparent);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.diff-unresolved-badge--ok {
+  background: color-mix(in srgb, var(--green) 14%, transparent);
+  color: var(--green-dim);
+  border-color: color-mix(in srgb, var(--green) 35%, transparent);
+}
+
+.diff-inline-actions-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.diff-inline-action-btn {
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  background: var(--bg-button);
+  color: var(--text-primary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.diff-inline-action-btn:hover:not(:disabled) {
+  background: var(--bg-button-hover);
+}
+
+.diff-inline-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.diff-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.diff-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+
+.diff-nav-core {
+  display: flex;
+  align-items: center;
+}
+
+.diff-nav-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.diff-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  background: var(--bg-button);
+  border: 1px solid var(--border-default);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.diff-nav-btn:hover:not(:disabled) {
+  background: var(--bg-button-hover);
+}
+
+.diff-nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.diff-nav-square {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+
+.diff-change-counter {
+  min-width: 64px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.diff-merge-toggle-btn,
+.diff-save-result-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  background: var(--bg-button);
+  border: 1px solid var(--border-default);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  width: 40px;
+  height: 40px;
+}
+
+.diff-toolbar-icon-svg {
+  width: 32px;
+  height: 32px;
+}
+
+.diff-merge-toggle-btn:hover:not(:disabled),
+.diff-save-result-btn:hover:not(:disabled) {
+  background: var(--bg-button-hover);
+}
+
+.diff-merge-toggle-btn:disabled,
+.diff-save-result-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.diff-merge-toggle-btn--active {
+  background: color-mix(in srgb, var(--blue) 18%, var(--bg-button));
+  color: var(--text-primary);
+  border-color: var(--blue);
+}
+
+.diff-merge-abort {
+  background: color-mix(in srgb, var(--red) 18%, var(--bg-button));
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.diff-merge-abort:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--red) 28%, var(--bg-button-hover));
+}
+
+.diff-save-result-btn--merge-mode {
+  background: color-mix(in srgb, var(--green) 22%, var(--bg-button));
+  color: var(--text-primary);
+  border-color: var(--green-dim);
+}
+
+.diff-save-result-btn--merge-mode:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--green) 32%, var(--bg-button-hover));
+}
+
+.diff-close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  color: var(--text-primary);
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.diff-close-button:hover {
+  opacity: 1;
+}
+
+/* --- Status Message --- */
+.diff-status-message {
+  padding: 12px;
+  background: var(--admonition-note-bg);
+  border-bottom: 1px solid var(--admonition-note-border);
+  color: var(--admonition-note-text);
+  text-align: center;
+  font-size: 13px;
+}
+
+/* --- Main Layout --- */
+.diff-main-layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.diff-headers {
+  display: flex;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+}
+
+.diff-header-pane {
+  flex: 1;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.diff-header-left {
+  border-right: 1px solid var(--border-default);
+}
+
+.diff-header-ribbon-spacer {
+  width: 40px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--border-default);
+  border-right: 1px solid var(--border-default);
+}
+
+.diff-header-version-label {
+  color: var(--text-primary);
+}
+
+.diff-header-branch-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* --- Panes --- */
+.diff-panes-row {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.diff-pane {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--bg-primary);
+  border-right: 1px solid var(--border-default);
+}
+
+.diff-pane-left {
+  border-right: 1px solid var(--border-default);
+}
+
+.diff-pane-right {
+  border-right: none;
+}
+
+
+.diff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.diff-row {
+  height: 20px;
+}
+
+.diff-row-context {
+  background: var(--bg-primary);
+}
+
+.diff-row-del {
+  background: color-mix(in srgb, var(--red-dim) 12%, transparent);
+}
+
+.diff-row-ins {
+  background: color-mix(in srgb, var(--green-dim) 12%, transparent);
+}
+
+.diff-row-change-left {
+  background: color-mix(in srgb, var(--red-dim) 10%, transparent);
+}
+
+.diff-row-change-right {
+  background: color-mix(in srgb, var(--green-dim) 10%, transparent);
+}
+
+.diff-row-del-spacer,
+.diff-row-ins-spacer {
+  background: color-mix(in srgb, var(--bg3) 25%, transparent);
+}
+
+.diff-row-separator {
+  background: var(--bg-secondary);
+  height: 8px;
+}
+
+.diff-row-collapsed {
+  background: var(--bg-secondary);
+}
+
+.diff-cell {
+  padding: 0;
+  vertical-align: top;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.diff-cell-merge-indicator {
+  width: 3px;
+  padding: 0;
+  background: transparent;
+}
+
+/* Same width as merge-indicator so left/right panes share one text column width (ribbons use row geometry). */
+.diff-cell-pane-spacer {
+  width: 3px;
+  padding: 0;
+  background: transparent;
+}
+
+.diff-cell-inline-action {
+  width: 72px;
+  min-width: 72px;
+  max-width: 72px;
+  padding: 0 4px;
+  vertical-align: top;
+  background: var(--bg-secondary);
+}
+
+.diff-cell-collapsed {
+  padding: 2px 8px;
+  text-align: center;
+}
+
+.diff-collapsed-label {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-style: italic;
+}
+
+.diff-text {
+  margin: 0;
+  padding: 2px 8px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.diff-text-spacer {
+  color: transparent;
+}
+
+
+.diff-inline-row-btn {
+  margin-top: 2px;
+  width: 100%;
+  min-height: 20px;
+  border: 1px solid var(--border-default);
+  border-radius: 3px;
+  background: var(--bg-button);
+  color: var(--text-primary);
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.diff-inline-row-btn:hover {
+  background: var(--bg-button-hover);
+}
+
+.diff-inline-row-btn-accept {
+  border-color: color-mix(in srgb, var(--green) 40%, var(--border-default));
+  background: color-mix(in srgb, var(--green) 14%, var(--bg-button));
+}
+
+.diff-inline-row-btn-reject {
+  border-color: color-mix(in srgb, var(--red) 40%, var(--border-default));
+  background: color-mix(in srgb, var(--red) 14%, var(--bg-button));
+}
+
+.diff-word-equal {
+  color: inherit;
+}
+
+.diff-word-del {
+  background: color-mix(in srgb, var(--red) 16%, transparent);
+  color: inherit;
+}
+
+.diff-word-ins {
+  background: color-mix(in srgb, var(--green) 16%, transparent);
+  color: inherit;
+}
+
+/* Merge mode row styling */
+.merge-row--unresolved {
+  opacity: 0.6;
+}
+
+.merge-row--selected {
+  opacity: 1;
+}
+
+.merge-row--other {
+  opacity: 0.3;
+}
+
+
+/* --- Ribbon Gutter --- */
+.diff-ribbon-gutter {
+  width: 40px;
+  flex-shrink: 0;
+  min-height: 0;
+  align-self: stretch;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-default);
+  border-right: 1px solid var(--border-default);
+  overflow: hidden;
+  position: relative;
+}
+
+.diff-ribbon-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.diff-ribbon {
+  opacity: 0.82;
+  stroke-width: 1;
+}
+
+.diff-ribbon-current {
+  opacity: 0.98;
+  stroke-width: 1.2;
+}
+
+.diff-ribbon-change {
+  fill: color-mix(in srgb, var(--blue) 18%, transparent);
+  stroke: color-mix(in srgb, var(--blue-dim) 40%, transparent);
+}
+
+.diff-ribbon-del {
+  fill: color-mix(in srgb, var(--red) 18%, transparent);
+  stroke: color-mix(in srgb, var(--red-dim) 35%, transparent);
+}
+
+.diff-ribbon-ins {
+  fill: color-mix(in srgb, var(--green) 18%, transparent);
+  stroke: color-mix(in srgb, var(--green-dim) 35%, transparent);
+}
+
+.diff-ribbon-controls {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.diff-ribbon-control-group {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  height: 22px;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.diff-ribbon-control-left {
+  transform: translateX(calc(-50% - 12px));
+}
+
+.diff-ribbon-control-right {
+  transform: translateX(calc(-50% + 12px));
+}
+
+.ribbon-ctrl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: var(--bg-button);
+  border: 1px solid var(--border-default);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 10px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px var(--shadow-sm);
+}
+
+.ribbon-ctrl-btn:hover {
+  background: var(--bg-button-hover);
+  border-color: var(--blue);
+}
+
+.ribbon-ctrl-btn.is-active:not(.ribbon-ctrl-accept-left):not(.ribbon-ctrl-accept-right) {
+  background: color-mix(in srgb, var(--blue) 24%, var(--bg-button));
+  color: var(--text-primary);
+  border-color: var(--blue);
+}
+
+/* Merge buffer: arrow = accept left (green), ✕ = accept right (red) */
+.ribbon-ctrl-btn.ribbon-ctrl-accept-left {
+  color: var(--green-dim, #b8bb26);
+  border-color: color-mix(in srgb, var(--green) 45%, var(--border-default));
+  background: color-mix(in srgb, var(--green) 14%, var(--bg-button));
+}
+
+.ribbon-ctrl-btn.ribbon-ctrl-accept-left:hover {
+  background: color-mix(in srgb, var(--green) 22%, var(--bg-button-hover));
+  border-color: color-mix(in srgb, var(--green) 55%, var(--border-default));
+}
+
+.ribbon-ctrl-btn.ribbon-ctrl-accept-left.is-active {
+  background: color-mix(in srgb, var(--green) 32%, var(--bg-button));
+  color: var(--green, #b8bb26);
+  border-color: var(--green-dim, #98971a);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--green-dim) 50%, transparent);
+}
+
+.ribbon-ctrl-btn.ribbon-ctrl-accept-right {
+  color: var(--red-dim, #cc241d);
+  border-color: color-mix(in srgb, var(--red) 45%, var(--border-default));
+  background: color-mix(in srgb, var(--red) 14%, var(--bg-button));
+}
+
+.ribbon-ctrl-btn.ribbon-ctrl-accept-right:hover {
+  background: color-mix(in srgb, var(--red) 22%, var(--bg-button-hover));
+  border-color: color-mix(in srgb, var(--red) 55%, var(--border-default));
+}
+
+.ribbon-ctrl-btn.ribbon-ctrl-accept-right.is-active {
+  background: color-mix(in srgb, var(--red) 32%, var(--bg-button));
+  color: var(--red, #fb4934);
+  border-color: var(--red-dim, #cc241d);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--red-dim) 50%, transparent);
+}
+
+.ribbon-arrow-icon {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+}
+
+/* --- Responsive adjustments --- */
+@media (max-width: 768px) {
+  .diff-toolbar {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .diff-toolbar-left-stack {
+    width: 100%;
+  }
+
+  .diff-toolbar-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .diff-header-pane {
+    font-size: 11px;
+  }
+
+  .diff-text {
+    font-size: 11px;
+  }
+}
+
+/* --- Scrollbar styling (webkit browsers) --- */
+.diff-pane::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.diff-pane::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--bg-scrollbar) 35%, transparent);
+}
+
+.diff-pane::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--bg-scrollbar-thumb) 55%, transparent);
+  border-radius: 4px;
+}
+
+.diff-pane::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--bg-scrollbar-hover) 70%, transparent);
+}

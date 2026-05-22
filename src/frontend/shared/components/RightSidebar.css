@@ -1,0 +1,154 @@
+.right-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+  background-color: var(--bg-sidebar);
+  overflow: hidden;
+  z-index: var(--z-sidebar, 100);
+}
+
+.tabs-header {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 4px;
+  box-sizing: border-box;
+  gap: 6px;
+  background-color: var(--bg-tabbar);
+  border-bottom: 1px solid var(--border-default);
+  border-radius: 0;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.tabs-header-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  /* Shrink below intrinsic tab width so Gruvie/History/Memory are not clipped when the sidebar is narrow. */
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabs-header-left::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.tabs-header-account {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+  padding-right: 4px;
+}
+
+.right-sidebar-auth-error {
+  margin: 0;
+  padding: 6px 8px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text-error, #c53030);
+  background: var(--bg-elevated, rgba(255, 255, 255, 0.06));
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+}
+
+.tab-button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  box-sizing: border-box;
+  min-height: 28px;
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: none;
+  background-color: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  overflow: visible;
+  z-index: 1;
+  transition: 0.2s background-color ease;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tabs-header-left .tab-button:last-child {
+  border-right: none;
+}
+
+.tab-button:hover {
+  background-color: var(--bg-button-hover);
+  color: var(--text-primary);
+}
+
+.tab-button.active {
+  border: 1px solid var(--accent-primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary);
+  z-index: 3;
+}
+
+.right-sidebar-account-button,
+.right-sidebar-avatar-button {
+  margin-right: 0;
+}
+
+
+.tabs-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  border-radius: 0;
+}
+
+.tab-pane {
+  display: none;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 14px 16px;
+  box-sizing: border-box;
+}
+
+.tab-pane.active {
+  display: flex;
+}
+
+.tabs-content,
+.tab-pane {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabs-content::-webkit-scrollbar,
+.tab-pane::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* AI assistant tab fills the panel (inner component supplies padding). */
+.tabs-content > .tab-pane:first-child {
+  padding: 0;
+}

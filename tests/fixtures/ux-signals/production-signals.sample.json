@@ -1,0 +1,60 @@
+{
+  "journeys": [
+    {
+      "journeyId": "app_boot_load",
+      "title": "App boot and initial project load",
+      "sessions": 600,
+      "impactedUsers": 210,
+      "severity": 3,
+      "rageClicks": 44,
+      "deadClicks": 91,
+      "abandonmentRate": 0.16,
+      "completionTimeMsP95": 17300
+    },
+    {
+      "journeyId": "ai_diff_acceptance",
+      "title": "AI diff preview and acceptance",
+      "sessions": 340,
+      "impactedUsers": 110,
+      "severity": 5,
+      "rageClicks": 52,
+      "deadClicks": 63,
+      "abandonmentRate": 0.29,
+      "completionTimeMsP95": 38400
+    },
+    {
+      "journeyId": "markdown_rendering",
+      "title": "Markdown preview rendering",
+      "sessions": 220,
+      "impactedUsers": 70,
+      "severity": 4,
+      "rageClicks": 20,
+      "deadClicks": 31,
+      "abandonmentRate": 0.14,
+      "completionTimeMsP95": 21800
+    },
+    {
+      "journeyId": "explorer_rename_terminal",
+      "title": "Explorer rename from terminal-created files",
+      "sessions": 120,
+      "impactedUsers": 40,
+      "severity": 3,
+      "rageClicks": 8,
+      "deadClicks": 14,
+      "abandonmentRate": 0.09,
+      "completionTimeMsP95": 12600
+    },
+    {
+      "journeyId": "new_user_onboarding",
+      "title": "New user onboarding path",
+      "sessions": 180,
+      "impactedUsers": 130,
+      "severity": 5,
+      "rageClicks": 38,
+      "deadClicks": 59,
+      "abandonmentRate": 0.33,
+      "completionTimeMsP95": 47100,
+      "notes": "High abandonment in first-run project setup."
+    }
+  ]
+}

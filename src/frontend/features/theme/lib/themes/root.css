@@ -1,0 +1,535 @@
+/**
+ * @ignore
+ * BEGIN HEADER
+ *
+ * Contains:        Centralized Theme & Color Palette
+ * CVM-Role:        CSS
+ * Maintainer:      Sudonym-i
+ * License:         GNU GPL v3
+ *
+ * Description:     Single source of truth for all colors in the application.
+ *                  Defines a Gruvbox-derived palette, named color scales, and
+ *                  semantic variables for light and dark mode. All other CSS
+ *                  files and Vue component styles should reference these
+ *                  variables rather than hard-coding color literals.
+ *
+ * END HEADER
+ */
+
+/* Typography note:
+ * External font CDNs are intentionally avoided so renderer CSS remains fully
+ * compatible with the app's local-only CSP (`style-src 'self' 'unsafe-inline'`).
+ * Font variables below keep local/system fallbacks for consistent rendering. */
+
+/* ---------------------------------------------------------------------------
+ * 1. Base palette tokens (Gruvbox)
+ * --------------------------------------------------------------------------- */
+:root {
+  /* Core surfaces */
+  --bg_h: #1d2021;
+  --bg-editor-surround: #181b1c;
+  --bg: var(--bg_h);
+  --bg_s: var(--bg_h);
+  --bg1: var(--bg_h);
+  --bg2: var(--bg_h);
+  --bg3: var(--bg_h);
+  --bg4: var(--bg_h);
+
+  /* Core foregrounds */
+  --fg: #ebdbb2;
+  --fg1: #ebdbb2;
+  --fg2: #d5c4a1;
+  --fg3: #bdae93;
+  --fg4: #a89984;
+
+  /* Gruvbox accents */
+  --red: #fb4934;
+  --red-dim: #cc241d;
+  --green: #b8bb26;
+  --green-dim: #98971a;
+  --yellow: #fabd2f;
+  --yellow-dim: #d79921;
+  --blue: #83a598;
+  --blue-dim: #458588;
+  --purple: #d3869b;
+  --purple-dim: #b16286;
+  --aqua: #8ec07c;
+  --aqua-dim: #689d6a;
+  --orange: #fe8019;
+  --orange-dim: #d65d0e;
+  --gray: #928374;
+  --gray-dim: #7c6f64;
+
+  /* Compatibility aliases used by legacy styles */
+  --grey-0: var(--bg_h);
+  --grey-1: var(--bg1);
+  --grey-2: var(--bg2);
+  --grey-3: var(--bg3);
+  --grey-4: var(--bg4);
+  --grey-5: var(--fg4);
+  --grey-6: var(--fg3);
+  --grey-7: var(--fg);
+
+  --green-selection: rgba(184, 187, 38, 0.28);
+  --green-selection-dark: rgba(184, 187, 38, 0.42);
+  --blue-selection: rgba(69, 133, 136, 0.24);
+  --blue-selection-dark: rgba(131, 165, 152, 0.34);
+  --purple-selection: rgba(177, 98, 134, 0.28);
+  --gold-selection: var(--yellow);
+  --gold-selection-dark: var(--yellow-dim);
+
+  --fg-error: var(--red-dim);
+  --bg-error: rgba(251, 73, 52, 0.16);
+
+  --blue-0: var(--blue);
+  --blue-1: var(--blue-dim);
+  --blue-3: #3c6f71;
+  --orange-0: #f9bc67;
+  --orange-1: var(--orange);
+  --orange-2: var(--orange-dim);
+  --beige-0: var(--bg);
+  --beige-2: var(--bg2);
+  --red-0: var(--red);
+  --red-1: var(--red-dim);
+  --red-2: #9d0006;
+  --red-7: #5f0f12;
+  --green-0: var(--green);
+  --green-1: var(--green-dim);
+  --apricot: #f2c5b6;
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Semantic variables — light mode
+ * --------------------------------------------------------------------------- */
+:root {
+  /* ---------------------------------------------------------------------------
+   * Surfaces
+   * --------------------------------------------------------------------------- */
+  --bg-primary: var(--bg_h);
+  --bg-secondary: var(--bg);
+  --bg-elevated: var(--bg_h);
+  --bg-sidebar: var(--bg_s);
+  --bg-toolbar: var(--bg1);
+  --bg-tabbar: var(--bg_s);
+  --bg-tab-active: var(--bg_h);
+  --bg-tab-inactive: var(--bg2);
+  --bg-statusbar: var(--bg2);
+  --bg-menubar: var(--bg1);
+  --bg-input: var(--bg_h);
+  --bg-button: var(--bg2);
+  --bg-button-hover: var(--bg3);
+  --bg-button-active: var(--bg4);
+  --bg-hover: var(--bg_h);
+  --bg-active: var(--bg_h);
+  --bg-selected: var(--bg_h);
+  --bg-drag: var(--bg2);
+  --bg-scrollbar: var(--bg2);
+  --bg-scrollbar-thumb: var(--bg4);
+  --bg-scrollbar-hover: var(--gray);
+  --bg-popover: var(--bg_h);
+  --bg-context-menu: var(--bg_h);
+  --bg-overlay: var(--bg_h);
+
+  /* ---------------------------------------------------------------------------
+   * Text
+   * --------------------------------------------------------------------------- */
+  --text-primary: var(--fg);
+  --text-secondary: var(--fg2);
+  --text-muted: var(--fg3);
+  --text-disabled: var(--fg4);
+  --text-placeholder: var(--fg4);
+  --text-on-accent: var(--bg_h);
+  --text-on-highlight: var(--fg);
+  --text-link: var(--blue-dim);
+  --text-link-visited: var(--purple-dim);
+  --text-code: var(--fg1);
+  --text-ui: var(--text-primary);
+
+  /* ---------------------------------------------------------------------------
+   * Borders
+   * --------------------------------------------------------------------------- */
+  --border-subtle: var(--bg3);
+  --border-default: var(--bg3);
+  --border-strong: var(--bg4);
+  --border-focus: var(--blue-dim);
+  --border-accent: var(--purple-dim);
+  --border-error: var(--red-dim);
+  --border-sidebar: var(--fg4);
+
+  /* ---------------------------------------------------------------------------
+   * Accents & soft surfaces
+   * --------------------------------------------------------------------------- */
+  --accent-primary: var(--purple-dim);
+  --accent-primary-hover: var(--purple);
+  --accent-primary-active: #8e4c70;
+  --accent-secondary: var(--orange-dim);
+  --accent-secondary-hover: var(--orange);
+  --accent-highlight: var(--yellow);
+  --accent-highlight-hover: #f6d365;
+  --accent-success: var(--green-dim);
+  --accent-warning: var(--orange);
+  --accent-danger: var(--red-dim);
+  --accent-info: var(--blue-dim);
+  --accent-tertiary: var(--purple-dim);
+  --accent-neutral: var(--gray);
+  --surface-accent-soft: color-mix(
+    in srgb,
+    var(--accent-tertiary) 18%,
+    var(--bg-primary)
+  );
+  --surface-primary-soft: color-mix(
+    in srgb,
+    var(--accent-primary) 16%,
+    var(--bg-primary)
+  );
+  --surface-secondary-soft: color-mix(
+    in srgb,
+    var(--accent-success) 14%,
+    var(--bg-primary)
+  );
+
+  /* ---------------------------------------------------------------------------
+   * Shadows
+   * --------------------------------------------------------------------------- */
+  --shadow-sm: rgba(40, 40, 40, 0.1);
+  --shadow-md: rgba(40, 40, 40, 0.18);
+  --shadow-lg: rgba(40, 40, 40, 0.28);
+
+  /* ---------------------------------------------------------------------------
+   * Admonitions
+   * --------------------------------------------------------------------------- */
+  --admonition-note-bg: rgba(69, 133, 136, 0.14);
+  --admonition-note-border: var(--blue-dim);
+  --admonition-note-text: #295b5d;
+  --admonition-warn-bg: rgba(254, 128, 25, 0.14);
+  --admonition-warn-border: var(--orange-dim);
+  --admonition-warn-text: #8f3f00;
+  --admonition-error-bg: rgba(204, 36, 29, 0.12);
+  --admonition-error-border: var(--red-dim);
+  --admonition-error-text: #7b1a16;
+  --admonition-tip-bg: rgba(104, 157, 106, 0.14);
+  --admonition-tip-border: var(--aqua-dim);
+  --admonition-tip-text: #2f5f39;
+
+  /* ---------------------------------------------------------------------------
+   * Tags
+   * --------------------------------------------------------------------------- */
+  --tag-bg: rgba(146, 131, 116, 0.2);
+  --tag-text: var(--fg2);
+  --tag-border: var(--bg4);
+  --tag-bg-hover: rgba(146, 131, 116, 0.28);
+
+  /* ---------------------------------------------------------------------------
+   * Editor
+   * --------------------------------------------------------------------------- */
+  --editor-cursor: var(--blue);
+  --editor-selection: rgba(69, 133, 136, 0.24);
+  --editor-match: rgba(250, 189, 47, 0.44);
+
+  /* ---------------------------------------------------------------------------
+   * Controls
+   * --------------------------------------------------------------------------- */
+  --control-track-off: var(--bg3);
+  --control-track-on: var(--green-dim);
+  --control-thumb: var(--bg_h);
+  --control-focus-ring: rgba(69, 133, 136, 0.34);
+
+  /* ---------------------------------------------------------------------------
+   * Progress
+   * --------------------------------------------------------------------------- */
+  --progress-track: var(--bg2);
+  --progress-fill: var(--green-dim);
+
+  /* ---------------------------------------------------------------------------
+   * Chrome & misc UI
+   * --------------------------------------------------------------------------- */
+  --drop-target-bg: rgba(69, 133, 136, 0.14);
+  --drop-target-border: var(--blue-dim);
+
+  --titlebar-bg: var(--bg-primary);
+  --titlebar-text: var(--text-primary);
+  --spinner-color: var(--accent-secondary);
+  --spinner-track: var(--progress-track);
+
+  --editor-tabstop: rgba(177, 98, 134, 0.45);
+
+  /* Layout layering scale */
+  --z-surface: 1;
+  --z-sidebar: 100;
+  --z-overlay: 900;
+  --z-overlay-command-palette: 1000;
+  --z-toast: 1100;
+
+  /* Utility sizing/radii/transitions used by legacy components */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 300ms ease-in-out;
+  --transition-slow: 500ms ease-in-out;
+
+  /* ---------------------------------------------------------------------------
+   * Heatmap & search
+   * --------------------------------------------------------------------------- */
+  --heatmap-00: #ebdbb2;
+  --heatmap-01: #d5c4a1;
+  --heatmap-02: #83a598;
+  --heatmap-03: #458588;
+  --heatmap-04: #8ec07c;
+  --heatmap-05: #b8bb26;
+  --heatmap-06: #fabd2f;
+  --heatmap-07: #fe8019;
+  --heatmap-08: #fb4934;
+  --heatmap-09: #d3869b;
+  --heatmap-10: #b16286;
+
+  --search-relevance-low: var(--accent-neutral);
+  --search-relevance-medium: var(--accent-info);
+  --search-relevance-high: var(--accent-highlight);
+
+  /* ---------------------------------------------------------------------------
+   * Patterns
+   * --------------------------------------------------------------------------- */
+  --pattern-stripe-green: repeating-linear-gradient(
+    45deg,
+    var(--accent-success),
+    var(--accent-success) 4px,
+    transparent 5px,
+    transparent 12px
+  );
+  --pattern-stripe-purple: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--orange-dim) 7%, transparent),
+    color-mix(in srgb, var(--orange-dim) 7%, transparent) 4px,
+    transparent 4px,
+    transparent 12px
+  );
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Semantic variables — dark mode
+ * --------------------------------------------------------------------------- */
+body.dark {
+  /* ---------------------------------------------------------------------------
+   * Base palette overrides
+   * --------------------------------------------------------------------------- */
+  --bg_h: #1d2021;
+  --bg: var(--bg_h);
+  --bg_s: var(--bg_h);
+  --bg1: var(--bg_h);
+  --bg2: var(--bg_h);
+  --bg3: var(--bg_h);
+  --bg4: var(--bg_h);
+
+  --fg: #ebdbb2;
+  --fg1: #ebdbb2;
+  --fg2: #d5c4a1;
+  --fg3: #bdae93;
+  --fg4: #a89984;
+
+  /* ---------------------------------------------------------------------------
+   * Surfaces
+   * --------------------------------------------------------------------------- */
+  --bg-primary: var(--bg_h);
+  --bg-secondary: var(--bg);
+  --bg-elevated: var(--bg_h);
+  --bg-sidebar: var(--bg_s);
+  --bg-toolbar: var(--bg1);
+  --bg-tabbar: var(--bg_s);
+  --bg-tab-active: var(--bg_h);
+  --bg-tab-inactive: var(--bg1);
+  --bg-statusbar: var(--bg);
+  --bg-menubar: var(--bg1);
+  --bg-input: var(--bg_h);
+  --bg-button: var(--bg2);
+  --bg-button-hover: var(--bg3);
+  --bg-button-active: var(--bg4);
+  --bg-hover: var(--bg_h);
+  --bg-active: var(--bg_h);
+  --bg-selected: var(--bg_h);
+  --bg-drag: var(--bg2);
+  --bg-scrollbar: var(--bg);
+  --bg-scrollbar-thumb: var(--bg3);
+  --bg-scrollbar-hover: var(--bg4);
+  --bg-popover: var(--bg_h);
+  --bg-context-menu: var(--bg_h);
+  --bg-overlay: var(--bg_h);
+
+  /* ---------------------------------------------------------------------------
+   * Text
+   * --------------------------------------------------------------------------- */
+  --text-primary: var(--fg1);
+  --text-secondary: var(--fg2);
+  --text-muted: var(--fg3);
+  --text-disabled: var(--fg4);
+  --text-placeholder: var(--fg4);
+  --text-on-accent: var(--bg_h);
+  --text-on-highlight: var(--bg_h);
+  --text-link: var(--blue);
+  --text-link-visited: var(--purple);
+  --text-code: var(--fg2);
+  --text-ui: var(--text-primary);
+
+  /* ---------------------------------------------------------------------------
+   * Borders
+   * --------------------------------------------------------------------------- */
+  --border-subtle: var(--bg2);
+  --border-default: var(--bg2);
+  --border-strong: var(--bg3);
+  --border-focus: var(--blue);
+  --border-accent: var(--purple);
+  --border-error: var(--red);
+  --border-sidebar: var(--fg4);
+
+  /* ---------------------------------------------------------------------------
+   * Accents & soft surfaces
+   * --------------------------------------------------------------------------- */
+  --accent-primary: var(--purple);
+  --accent-primary-hover: #e0a3b5;
+  --accent-primary-active: var(--purple-dim);
+  --accent-secondary: var(--orange);
+  --accent-secondary-hover: #f59a4c;
+  --accent-highlight: var(--yellow);
+  --accent-highlight-hover: #f5d06f;
+  --accent-success: var(--green);
+  --accent-warning: var(--orange);
+  --accent-danger: var(--red);
+  --accent-info: var(--blue);
+  --accent-tertiary: var(--purple);
+  --accent-neutral: var(--gray);
+  --surface-accent-soft: color-mix(
+    in srgb,
+    var(--accent-tertiary) 18%,
+    var(--bg-primary)
+  );
+  --surface-primary-soft: color-mix(
+    in srgb,
+    var(--accent-primary) 16%,
+    var(--bg-primary)
+  );
+  --surface-secondary-soft: color-mix(
+    in srgb,
+    var(--accent-success) 14%,
+    var(--bg-primary)
+  );
+
+  /* ---------------------------------------------------------------------------
+   * Shadows
+   * --------------------------------------------------------------------------- */
+  --shadow-sm: rgba(0, 0, 0, 0.24);
+  --shadow-md: rgba(0, 0, 0, 0.36);
+  --shadow-lg: rgba(0, 0, 0, 0.5);
+
+  /* ---------------------------------------------------------------------------
+   * Admonitions
+   * --------------------------------------------------------------------------- */
+  --admonition-note-bg: rgba(131, 165, 152, 0.16);
+  --admonition-note-border: var(--blue);
+  --admonition-note-text: #b8c9c1;
+  --admonition-warn-bg: rgba(250, 189, 47, 0.14);
+  --admonition-warn-border: var(--orange);
+  --admonition-warn-text: #f3c97a;
+  --admonition-error-bg: rgba(251, 73, 52, 0.2);
+  --admonition-error-border: var(--red);
+  --admonition-error-text: #f7b1a8;
+  --admonition-tip-bg: rgba(142, 192, 124, 0.16);
+  --admonition-tip-border: var(--aqua);
+  --admonition-tip-text: #b9d8ad;
+
+  /* ---------------------------------------------------------------------------
+   * Tags
+   * --------------------------------------------------------------------------- */
+  --tag-bg: rgba(146, 131, 116, 0.2);
+  --tag-text: var(--fg2);
+  --tag-border: var(--bg4);
+  --tag-bg-hover: rgba(146, 131, 116, 0.3);
+
+  /* ---------------------------------------------------------------------------
+   * Editor
+   * --------------------------------------------------------------------------- */
+  --editor-cursor: var(--blue);
+  --editor-selection: rgba(131, 165, 152, 0.24);
+  --editor-match: rgba(250, 189, 47, 0.36);
+
+  /* ---------------------------------------------------------------------------
+   * Controls
+   * --------------------------------------------------------------------------- */
+  --control-track-off: var(--bg3);
+  --control-track-on: var(--green);
+  --control-thumb: var(--fg1);
+  --control-focus-ring: rgba(131, 165, 152, 0.44);
+
+  /* ---------------------------------------------------------------------------
+   * Progress
+   * --------------------------------------------------------------------------- */
+  --progress-track: var(--bg2);
+  --progress-fill: var(--green);
+
+  /* ---------------------------------------------------------------------------
+   * Chrome & misc UI
+   * --------------------------------------------------------------------------- */
+  --drop-target-bg: rgba(131, 165, 152, 0.16);
+  --drop-target-border: var(--blue);
+
+  --titlebar-bg: var(--bg-primary);
+  --titlebar-text: var(--text-primary);
+  --spinner-color: var(--accent-secondary);
+  --spinner-track: var(--progress-track);
+
+  --editor-tabstop: rgba(211, 134, 155, 0.5);
+  --mask-solid: #000;
+
+  /* Layout layering scale */
+  --z-surface: 1;
+  --z-sidebar: 100;
+  --z-overlay: 900;
+  --z-overlay-command-palette: 1000;
+  --z-toast: 1100;
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Typography — font family variables
+ *
+ *    All components should reference these variables rather than hardcoding
+ *    font families.
+ *
+ *    --font-display    Georgia                All UI: splash, large chrome text
+ *    --font-ui         Zed Mono              All UI: menus, forms, window chrome
+ *    --font-body       Zed Mono              Editor paragraph text / document body (non-heading)
+ *    --font-heading    Libre Baskerville      Markdown headings only (editor + print preview)
+ *    --font-mono       Cutive Mono            Code, logs, monospace UI, terminal
+ *    --font-accent     Georgia                Tags, badges (same as UI — Georgia)
+ *    --font-tab        Georgia                Document tab titles
+ * --------------------------------------------------------------------------- */
+:root {
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-ui: "Zed Mono", "Cutive Mono", "Courier New", Courier, "Liberation Mono", monospace;
+  --font-body: "Zed Mono", "Cutive Mono", "Courier New", Courier, "Liberation Mono", monospace;
+  --font-heading: "Libre Baskerville", "Baskerville", Georgia, serif;
+  /* Cutive Mono is imported above; Courier New / Courier are guaranteed
+   * system-installed monospace fallbacks that keep the xterm.js grid intact
+   * during the brief window before the webfont finishes loading. */
+  --font-mono:
+    "Cutive Mono", "Courier New", Courier, "Liberation Mono", monospace;
+  --font-accent: Georgia, "Times New Roman", serif;
+  --font-tab: Georgia, "Times New Roman", serif;
+}
+
+/* All UI chrome and default document prose use Zed Mono via design tokens. */
+html body {
+  font-family: var(--font-ui);
+  font-optical-sizing: auto;
+}
+
+/** Optional utility: same stack as markdown ATX headings (rarely needed in templates). */
+.libre-baskerville-body {
+  font-family: var(--font-heading);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}

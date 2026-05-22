@@ -1,0 +1,50 @@
+/*
+ * Vendor overrides isolated to reduce coupling in VersionControlTab.css.
+ * Keep commit-graph generated-class targeting and forceful overrides here.
+ */
+
+/* Hide library label column; row cells (CommitGraphRenderer) show branch + message on hover. */
+.git-version-graph-host--commit-graph [class*='index-module_container__'] {
+  width: 100% !important;
+  max-width: none !important;
+  font-family: var(--font-mono);
+}
+
+/* commit-graph injects max-width: 500px on the SVG wrapper; allow full lane width when scaled up. */
+.git-version-graph-host--commit-graph [class*='index-module_svg__'] {
+  max-width: none;
+}
+
+.git-version-graph-host--commit-graph [class*='commitInfoContainer'] {
+  display: none !important;
+}
+
+/* Cells handle hit-testing; graph is visual only. */
+.git-version-graph-host--commit-graph svg {
+  pointer-events: none;
+}
+
+.git-history-window-svg {
+  display: block;
+  max-width: none;
+}
+
+/* commit-graph draws the dot ring with stroke="white"; align with panel bg. */
+.git-version-graph-host--commit-graph svg circle[stroke] {
+  stroke: color-mix(in srgb, var(--bg_h) 88%, white);
+}
+
+/* Emphasize the current branch rail when it uses the whitish token. */
+.git-version-graph-host--commit-graph svg path[stroke='var(--fg1)'],
+.git-version-graph-host--commit-graph svg line[stroke='var(--fg1)'],
+.git-version-graph-host--commit-graph svg polyline[stroke='var(--fg1)'] {
+  stroke-width: 6px !important;
+}
+
+/*
+ * commit-graph stacks a large branch-colored disk under a smaller inner disk; the uncovered
+ * annulus reads as an extra branch-colored outer ring - paint the under-disk like the panel.
+ */
+.git-version-graph-host--commit-graph svg g[filter^='url(#filter_'] > circle:first-of-type {
+  fill: var(--bg_h) !important;
+}

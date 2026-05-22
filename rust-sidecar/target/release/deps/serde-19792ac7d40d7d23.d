@@ -1,0 +1,14 @@
+/home/sudonym/projects/Gruvbox_studio/rust-sidecar/target/release/deps/serde-19792ac7d40d7d23.d: /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/sudonym/projects/Gruvbox_studio/rust-sidecar/target/release/build/serde-c0a593441f8c5c6c/out/private.rs
+
+/home/sudonym/projects/Gruvbox_studio/rust-sidecar/target/release/deps/libserde-19792ac7d40d7d23.rlib: /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/sudonym/projects/Gruvbox_studio/rust-sidecar/target/release/build/serde-c0a593441f8c5c6c/out/private.rs
+
+/home/sudonym/projects/Gruvbox_studio/rust-sidecar/target/release/deps/libserde-19792ac7d40d7d23.rmeta: /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/sudonym/projects/Gruvbox_studio/rust-sidecar/target/release/build/serde-c0a593441f8c5c6c/out/private.rs
+
+/home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/home/sudonym/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/home/sudonym/projects/Gruvbox_studio/rust-sidecar/target/release/build/serde-c0a593441f8c5c6c/out/private.rs:
+
+# env-dep:OUT_DIR=/home/sudonym/projects/Gruvbox_studio/rust-sidecar/target/release/build/serde-c0a593441f8c5c6c/out

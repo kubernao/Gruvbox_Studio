@@ -1,0 +1,33 @@
+{
+  "ignoreFiles": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**"
+  ],
+  "rules": {
+    "declaration-no-important": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ],
+    "selector-max-specificity": [
+      "0,4,0",
+      {
+        "severity": "warning"
+      }
+    ],
+    "max-nesting-depth": [
+      3,
+      {
+        "severity": "warning"
+      }
+    ],
+    "no-duplicate-selectors": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ]
+  }
+}

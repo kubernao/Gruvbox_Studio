@@ -1,0 +1,46 @@
+{
+  "journeys": [
+    {
+      "journeyId": "app_boot_load",
+      "owner": "desktop-core",
+      "hasDeterministicFixture": true,
+      "tests": ["tests/e2e/app-loading.test.ts", "tests/e2e/editor-file-loading.test.ts"]
+    },
+    {
+      "journeyId": "explorer_rename_terminal",
+      "owner": "file-explorer",
+      "hasDeterministicFixture": true,
+      "tests": ["tests/e2e/explorer-rename-terminals.test.ts"]
+    },
+    {
+      "journeyId": "editor_drag_selection",
+      "owner": "editor",
+      "hasDeterministicFixture": true,
+      "tests": ["tests/e2e/editor-drag-selection.test.ts", "tests/e2e/editor-layout.test.ts"]
+    },
+    {
+      "journeyId": "ai_tab_visibility",
+      "owner": "ai-workflows",
+      "hasDeterministicFixture": true,
+      "tests": ["tests/e2e/ai-tab-composer-visibility.test.ts"]
+    },
+    {
+      "journeyId": "markdown_rendering",
+      "owner": "editor",
+      "hasDeterministicFixture": true,
+      "tests": ["tests/e2e/mdx-markdown-smoke.test.ts", "tests/e2e/visual-critical-ui.test.ts"]
+    },
+    {
+      "journeyId": "git_history_workspace",
+      "owner": "version-control",
+      "hasDeterministicFixture": true,
+      "tests": ["tests/e2e/git-history-workflows.test.ts"]
+    },
+    {
+      "journeyId": "editor_document_persistence",
+      "owner": "editor",
+      "hasDeterministicFixture": true,
+      "tests": ["tests/e2e/editor-document-persistence.test.ts"]
+    }
+  ]
+}

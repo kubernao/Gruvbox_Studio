@@ -1,0 +1,11 @@
+C:\Users\isick\Desktop\Gruvbox\Gruvbox Studio\src-rust\target\release\deps\tower_layer-ec5965a092e99ad7.d: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\identity.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\layer_fn.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\stack.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\tuple.rs
+
+C:\Users\isick\Desktop\Gruvbox\Gruvbox Studio\src-rust\target\release\deps\libtower_layer-ec5965a092e99ad7.rlib: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\identity.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\layer_fn.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\stack.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\tuple.rs
+
+C:\Users\isick\Desktop\Gruvbox\Gruvbox Studio\src-rust\target\release\deps\libtower_layer-ec5965a092e99ad7.rmeta: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\identity.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\layer_fn.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\stack.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\tuple.rs
+
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\lib.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\identity.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\layer_fn.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\stack.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tower-layer-0.3.3\src\tuple.rs:

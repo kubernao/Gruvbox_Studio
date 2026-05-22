@@ -1,0 +1,679 @@
+@import './vendor-overrides/codemirror.css';
+
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  flex: 1;
+  background-color: transparent;
+  position: relative;
+}
+
+.middle-workbench {
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.editor-pane.history-preview-mode .middle-content-host {
+  padding-top: 10px;
+}
+
+.history-preview-close-row {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 10px 0;
+}
+
+.history-preview-close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.history-preview-close-button:hover {
+  opacity: 0.9;
+}
+
+/* Column flex: default flex-shrink is 1, so header + tab strip were shrinking and
+   getting clipped by overflow:hidden on this pane. Keep chrome + tabs at natural height. */
+.middle-workbench > .editor-actions,
+.middle-workbench > .document-tablist-wrapper-react {
+  flex-shrink: 0;
+}
+
+.editor-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  text-align: center;
+  gap: clamp(16px, 2.5vh, 24px);
+}
+
+/*
+ * Typography chain from `Gruvbox_landing/index.html`: `.hero-brand-stack` sits under `<body>` with
+ * `font-family: Libre Baskerville…`, `font-size: 17px`, `line-height: 1.65`, and
+ * `-webkit-font-smoothing: antialiased`. The ASCII `<pre>` then overrides smoothing to `auto` and
+ * uses `font-size: .6em` of that 17px basis. Here we use `--font-heading` (includes Libre when
+ * loaded) for the same em basis, but a slightly smaller clamped size so the ~155-column art fits
+ * the editor column without dominating it.
+ */
+.editor-welcome-brand-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  font-family: var(--font-heading);
+  font-size: clamp(8px, 1.1vmin, 10px);
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Stacked pre blocks: shared metrics match `.hero-brand-ascii` in index.html. */
+.editor-welcome-ascii-layers {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  max-width: 100%;
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.editor-welcome-ascii-layers > .editor-welcome-ascii {
+  grid-area: 1 / 1;
+}
+
+.editor-welcome-ascii {
+  margin: 0;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-family: Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.6em;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: pre;
+  /* `index.html` body uses antialiased; `.hero-brand-ascii` resets to `auto` for the mono banner. */
+  -webkit-font-smoothing: auto;
+  text-rendering: geometricPrecision;
+  /* Studio `html body` sets `font-optical-sizing: auto` (variable UI fonts); reset for block glyphs. */
+  font-optical-sizing: none;
+  font-variant-ligatures: none;
+  font-feature-settings: normal;
+}
+
+/* Solid fill: same foreground as the top of the landing gradient (fills clip seams on the layer above). */
+.editor-welcome-ascii-base {
+  z-index: 0;
+  color: var(--fg);
+}
+
+/* Copied from `.hero-brand-ascii` in Gruvbox_landing/index.html. */
+.editor-welcome-ascii-gradient {
+  z-index: 1;
+  color: transparent;
+  background: linear-gradient(to bottom, var(--fg) 0%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.editor-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: var(--bg-error);
+  border: 1px solid var(--border-error);
+  border-radius: 8px;
+  max-width: 500px;
+}
+
+.error-content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent-danger);
+  margin: 0;
+}
+
+.error-content p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.error-content button {
+  padding: 8px 16px;
+  background: var(--accent-danger);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.error-content button:hover {
+  background: color-mix(in srgb, var(--accent-danger) 80%, var(--bg-primary));
+}
+
+/* Covers the workbench while reading/saving. Blocks click-drag to the editor below (intentional).
+   While reading a file, the editor subtree is not mounted. While saving, the editor stays mounted
+   but interaction is blocked until save finishes. */
+.editor-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: color-mix(in srgb, var(--bg-overlay) 85%, var(--bg-primary));
+  z-index: 100;
+  color: var(--text-primary);
+}
+
+.editor-loading p {
+  font-size: 14px;
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.editor-loading .spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Dev-only: see EditorPane (process.env.NODE_ENV === "development") */
+.editor-diagnostic-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  pointer-events: none;
+  display: none;
+}
+
+.editor-diagnostic-strip span {
+  white-space: nowrap;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.editor-container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.middle-content-host {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  /* Take remaining height; do not let flex shrink steal space from tab strip */
+  flex-shrink: 1;
+}
+
+.main-editor-wrapper {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  transition: 0.2s background-color ease;
+  position: relative;
+  padding: 0 24px 0 24px;
+  box-sizing: border-box;
+}
+
+/* No gutter column (line numbers / fold) in markdown — setup omits them; hide any stray gutter. */
+.markdown-codemirror-root > .cm-editor .cm-gutters {
+  display: none;
+}
+
+/* Inactive-line formatting was previously hidden with width:0 on cm-formatting spans; that broke
+   CodeMirror posAtCoords / mouse drag-selection. Conceal is handled by markdownFormattingConceal.ts;
+   remaining marks use default .cm-formatting-* opacity in this file. */
+
+.main-editor-cm-root {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.markdown-codemirror-root,
+.code-codemirror-root {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.markdown-codemirror-root > .cm-editor,
+.code-codemirror-root .cm-editor {
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg-editor-surround);
+  border-radius: 6px 6px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--accent-highlight);
+  border-bottom: none;
+}
+
+.markdown-codemirror-root > .cm-editor {
+  box-shadow: 0 8px 40px var(--shadow-md), 0 2px 12px var(--shadow-lg);
+}
+
+.code-codemirror-root .cm-editor {
+  box-shadow: none;
+}
+
+.code-codemirror-root .cm-content {
+  font-family: var(--font-mono);
+}
+
+.markdown-codemirror-root > .cm-editor .cm-content {
+  font-family: var(--font-body);
+  line-height: 1.6;
+  font-size: calc(var(--editor-font-size, 15px) + 1px);
+}
+
+/* Ensure native text selection (click-drag) works under Electron/WebKit; parents may set user-select: none. */
+.markdown-codemirror-root > .cm-editor,
+.markdown-codemirror-root > .cm-editor .cm-scroller,
+.markdown-codemirror-root > .cm-editor .cm-content,
+.code-codemirror-root .cm-editor,
+.code-codemirror-root .cm-scroller,
+.code-codemirror-root .cm-content {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.markdown-codemirror-root > .cm-editor .cm-md-conceal-widget,
+.code-codemirror-root .cm-md-conceal-widget {
+  display: inline;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.markdown-codemirror-root > .cm-editor .cm-md-list-mark-widget {
+  display: inline-block;
+  min-width: 1.25em;
+  color: var(--text-secondary);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.markdown-codemirror-root > .cm-editor .cm-monospace {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+.markdown-codemirror-root > .cm-editor .cm-link {
+  color: var(--blue-dim);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.markdown-codemirror-root > .cm-editor .cm-url {
+  color: var(--blue-dim);
+  opacity: 0.9;
+}
+
+.markdown-codemirror-root > .cm-editor .cm-quote {
+  color: var(--text-secondary);
+}
+
+.markdown-codemirror-root > .cm-editor .cm-header,
+.markdown-codemirror-root > .cm-editor .cm-header-1,
+.markdown-codemirror-root > .cm-editor .cm-header-2,
+.markdown-codemirror-root > .cm-editor .cm-header-3,
+.markdown-codemirror-root > .cm-editor .cm-header-4,
+.markdown-codemirror-root > .cm-editor .cm-header-5,
+.markdown-codemirror-root > .cm-editor .cm-header-6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Heading scale: larger than body and stepped so H1 reads clearly above H2 (keep in sync with markdownProseHighlight.ts). */
+.markdown-codemirror-root > .cm-editor .cm-header-1 { font-size: 2.45em; line-height: 1.22; }
+.markdown-codemirror-root > .cm-editor .cm-header-2 { font-size: 1.88em; line-height: 1.24; }
+.markdown-codemirror-root > .cm-editor .cm-header-3 { font-size: 1.58em; line-height: 1.25; }
+.markdown-codemirror-root > .cm-editor .cm-header-4 { font-size: 1.38em; line-height: 1.28; }
+.markdown-codemirror-root > .cm-editor .cm-header-5 { font-size: 1.18em; line-height: 1.3; }
+.markdown-codemirror-root > .cm-editor .cm-header-6 { font-size: 1.06em; line-height: 1.32; }
+
+.markdown-codemirror-root > .cm-editor .cm-formatting-code,
+.markdown-codemirror-root > .cm-editor .cm-formatting-code-block,
+.markdown-codemirror-root > .cm-editor .cm-formatting-quote,
+.markdown-codemirror-root > .cm-editor .cm-formatting-strong,
+.markdown-codemirror-root > .cm-editor .cm-formatting-em,
+.markdown-codemirror-root > .cm-editor .cm-escape-char {
+  opacity: 0.65;
+}
+
+.markdown-codemirror-root > .cm-editor .cm-table,
+.markdown-codemirror-root > .cm-editor .cm-zkn-tag,
+.markdown-codemirror-root > .cm-editor .cm-strong {
+  font-weight: bold;
+}
+
+.markdown-codemirror-root .cm-table-widget {
+  margin: 0.4rem 0 0.8rem;
+}
+
+.markdown-codemirror-root .cm-inline-html-widget {
+  display: inline;
+}
+
+.markdown-codemirror-root .cm-mermaid-widget {
+  margin: 0.5rem 0 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text-secondary);
+}
+
+.markdown-codemirror-root .cm-line.cm-mermaid-hidden-line {
+  display: none;
+}
+
+.markdown-codemirror-root .cm-mermaid-widget svg {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.markdown-codemirror-root .cm-mermaid-widget-error {
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--accent-danger);
+  background: color-mix(in srgb, var(--bg-error) 60%, var(--bg-primary));
+  border: 1px solid var(--border-error);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.markdown-codemirror-root .cm-latex-widget {
+  margin: 0.5rem 0 0.9rem;
+  background: color-mix(in srgb, var(--bg-secondary) 88%, var(--bg-primary));
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text-primary);
+  overflow-x: auto;
+}
+
+.markdown-codemirror-root .cm-line.cm-latex-hidden-line {
+  display: none;
+}
+
+.markdown-codemirror-root .cm-latex-widget .katex-display {
+  margin: 0;
+}
+
+.markdown-codemirror-root .cm-latex-widget-error {
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--accent-danger);
+  background: color-mix(in srgb, var(--bg-error) 60%, var(--bg-primary));
+  border: 1px solid var(--border-error);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+/* Matchwhen table widget: keep active cell ring on-brand and distinct from the main doc selection. */
+.markdown-codemirror-root {
+  --table-active-cell-color: var(--blue-dim);
+}
+
+.markdown-codemirror-root .cm-table-widget-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid color-mix(in srgb, var(--text-primary) 15%, var(--border-default));
+  background: color-mix(in srgb, var(--bg-editor-surround) 90%, var(--bg-primary));
+}
+
+.markdown-codemirror-root .cm-table-widget-table th,
+.markdown-codemirror-root .cm-table-widget-table td {
+  border: 1.5px solid color-mix(in srgb, var(--text-primary) 12%, var(--border-subtle));
+  padding: 0.35rem 0.5rem;
+}
+
+.markdown-codemirror-root .cm-table-widget-table th {
+  /* Subtle header strip: slightly above body cells, not a bright bar */
+  background: color-mix(in srgb, var(--bg-secondary) 88%, var(--text-primary) 6%);
+  color: var(--text-primary);
+}
+
+.main-editor-wrapper .cm-scroller {
+  padding: 32px 44px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto !important;
+}
+
+.main-editor-wrapper.code-file .cm-scroller {
+  padding: 0;
+}
+
+.editor-pane:has(.editor-diagnostic-strip) .middle-content-host {
+  padding-bottom: 28px;
+}
+
+.editor-pane .editor-container .cm-editor {
+  font-size: var(--editor-font-size, 15px);
+}
+
+.editor-pane .editor-container .cm-scroller {
+  background-color: transparent;
+}
+
+.editor-pane .editor-container .cm-editor.cm-focused {
+  outline: none;
+}
+
+.editor-pane.history-preview-mode .main-editor-wrapper {
+  background-color: transparent;
+  padding: 0;
+}
+
+.editor-pane.history-preview-mode .main-editor-wrapper .cm-editor {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.editor-pane .editor-container .cm-gutters {
+  background-color: color-mix(in srgb, var(--bg-secondary) 82%, transparent);
+  border-right: 1px solid var(--border-default);
+}
+
+.editor-pane .editor-container .cm-linenumber {
+  color: var(--text-muted);
+  min-width: 3ch;
+  padding: 0 8px;
+}
+
+/* No visible full-line strip; keep highlightActiveLine() so .cm-activeLine still exists for markdown mask */
+.editor-pane .editor-container .cm-activeLine {
+  background-color: transparent;
+}
+
+.editor-pane .editor-container .cm-activeLineGutter {
+  background-color: color-mix(in srgb, var(--bg-secondary) 82%, transparent);
+}
+
+.editor-pane .editor-container .cm-cursor {
+  border-left: 2px solid var(--text-primary);
+}
+
+.editor-pane .editor-container .cm-selectionBackground {
+  background-color: var(--editor-tabstop);
+}
+
+.editor-pane .editor-container .cm-foldGutter .cm-gutterElement > .cm-foldPlaceholder {
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.editor-pane .editor-container .cm-foldPlaceholder {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: 2px;
+  margin: 0 2px;
+  padding: 0 4px;
+}
+
+.editor-ai-inline-review-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+}
+
+.editor-ai-inline-review-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.editor-ai-inline-review-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.editor-ai-inline-review-commit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, var(--green) 65%, var(--border-subtle));
+  background: color-mix(in srgb, var(--green) 28%, var(--bg-elevated));
+  color: color-mix(in srgb, var(--green) 80%, var(--text-primary));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--green) 34%, transparent);
+  cursor: pointer;
+  transition: background-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.editor-ai-inline-review-commit:hover {
+  background: color-mix(in srgb, var(--green) 38%, var(--bg-elevated));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--green) 60%, transparent);
+  transform: translateY(-1px);
+}
+
+.editor-pane .editor-container .cm-content .cm-ai-edit-line {
+  background-color: color-mix(in srgb, var(--green) 20%, transparent);
+}
+
+.editor-pane .editor-container .cm-ai-section-undo-wrap {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 0 2px;
+}
+
+.editor-pane .editor-container .cm-ai-section-undo-btn {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, var(--orange) 40%, var(--border-subtle));
+  background: color-mix(in srgb, var(--bg-elevated) 90%, transparent);
+  color: var(--orange);
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.editor-pane .editor-container .cm-ai-section-undo-btn:hover {
+  background: color-mix(in srgb, var(--orange) 15%, var(--bg-hover));
+  border-color: color-mix(in srgb, var(--orange) 65%, var(--border-subtle));
+}
+
+/* Scrollbar styling */
+.editor-pane .editor-container .cm-scroller::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.editor-pane .editor-container .cm-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editor-pane .editor-container .cm-scroller::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-muted) 60%, transparent);
+  border-radius: 3px;
+}
+
+.editor-pane .editor-container .cm-scroller::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text-secondary) 72%, transparent);
+}

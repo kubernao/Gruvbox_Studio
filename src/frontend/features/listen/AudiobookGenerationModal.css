@@ -1,0 +1,116 @@
+.audiobook-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.audiobook-modal-panel {
+  width: min(520px, 100%);
+  max-height: min(90vh, 720px);
+  overflow: auto;
+  padding: 20px 22px;
+  border-radius: 10px;
+  border: 1px solid #504945;
+  background: #282828;
+  color: #ebdbb2;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.audiobook-modal-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.audiobook-modal-desc {
+  margin: 0 0 16px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #bdae93;
+}
+
+.audiobook-modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+
+.audiobook-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.audiobook-modal-field-span2 {
+  grid-column: span 2;
+}
+
+.audiobook-modal-field select,
+.audiobook-modal-field input[type='range'] {
+  width: 100%;
+}
+
+.audiobook-modal-fieldset {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #504945;
+  border-radius: 6px;
+}
+
+.audiobook-modal-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.audiobook-modal-progress {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: #83a598;
+}
+
+.audiobook-modal-error {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: #fb4934;
+}
+
+.audiobook-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.audiobook-modal-btn {
+  padding: 8px 14px;
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid #665c54;
+}
+
+.audiobook-modal-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.audiobook-modal-btn.primary {
+  background: #689d6a;
+  color: #1d2021;
+  border-color: #689d6a;
+}
+
+.audiobook-modal-btn.secondary {
+  background: #504945;
+  color: #fbf1c7;
+}

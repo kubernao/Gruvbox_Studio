@@ -1,0 +1,261 @@
+.command-palette-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  max-width: min(42rem, 100%);
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.command-palette-trigger:hover {
+  background: var(--bg-button-hover);
+  color: var(--text-primary);
+}
+
+.command-palette-trigger-label {
+  max-width: min(28ch, 100%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-palette-trigger-kbd {
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.command-palette-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay-command-palette, 1000);
+}
+
+.command-palette-backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--bg-primary) 32%, transparent);
+}
+
+.command-palette-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(50em, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  min-width: min(340px, calc(100vw - 32px));
+  max-height: min(480px, calc(100vh - 32px));
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--border-subtle) 85%, transparent);
+  background: color-mix(in srgb, var(--bg-primary) 68%, transparent);
+  backdrop-filter: saturate(160%) blur(28px);
+  -webkit-backdrop-filter: saturate(160%) blur(28px);
+  box-shadow:
+    0 8px 28px color-mix(in srgb, #000 28%, transparent),
+    0 28px 90px color-mix(in srgb, #000 42%, transparent);
+  overflow: hidden;
+}
+
+.command-palette-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.command-palette-input-icon {
+  color: var(--text-secondary);
+}
+
+.command-palette-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 20px;
+  font-family: inherit;
+}
+
+.command-palette-results {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  flex: 1;
+  min-width: 0;
+}
+
+.command-palette-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 14px;
+  font-size: 15px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.command-palette-row.active {
+  background: var(--bg-button-hover);
+}
+
+.command-palette-row-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-palette-row-detail {
+  font-size: 13px;
+  color: var(--text-secondary);
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-palette-row-kbd {
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+}
+
+.command-palette-empty {
+  padding: 16px 12px;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+/* Commit message (Save version) — same shell as the command palette */
+.command-palette-panel--commit-message {
+  max-height: min(560px, calc(100vh - 32px));
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.command-palette-commit-head {
+  padding: 14px 16px 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.command-palette-commit-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+}
+
+.command-palette-commit-subtitle {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+}
+
+.command-palette-commit-body {
+  padding: 12px 16px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.command-palette-commit-textarea {
+  width: 100%;
+  flex: 1;
+  min-height: 120px;
+  resize: vertical;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.45;
+  font-family: var(--font-ui);
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--border-sidebar) 38%, var(--border-subtle));
+  background: color-mix(in srgb, var(--bg-primary) 55%, var(--bg1));
+  color: var(--text-primary);
+}
+
+.command-palette-commit-textarea:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--border-focus) 22%, transparent);
+}
+
+.command-palette-commit-footer {
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.command-palette-commit-hint {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+}
+
+.command-palette-commit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.command-palette-commit-secondary {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+.command-palette-commit-secondary:hover {
+  background: var(--bg-button-hover);
+}
+
+.command-palette-commit-primary {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, var(--border-sidebar) 38%, var(--border-subtle));
+  background: var(--bg1);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+.command-palette-commit-primary:hover:not(:disabled) {
+  background: var(--bg-button-hover);
+}
+
+.command-palette-commit-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

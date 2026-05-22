@@ -1,0 +1,104 @@
+.document-listen-setup-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.document-listen-setup-modal-panel {
+  width: min(440px, 100%);
+  max-height: min(90vh, 560px);
+  overflow: auto;
+  padding: 20px 22px;
+  border-radius: 10px;
+  border: 1px solid #504945;
+  background: #282828;
+  color: #ebdbb2;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.document-listen-setup-modal-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.document-listen-setup-modal-desc {
+  margin: 0 0 16px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #bdae93;
+}
+
+.document-listen-setup-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+
+.document-listen-setup-modal-field select,
+.document-listen-setup-modal-field input[type='range'] {
+  width: 100%;
+}
+
+.document-listen-setup-modal-rate-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.document-listen-setup-modal-rate-value {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  color: #83a598;
+  min-width: 2.5rem;
+}
+
+.document-listen-setup-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.document-listen-setup-modal-actions button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid #504945;
+  background: #3c3836;
+  color: #ebdbb2;
+}
+
+.document-listen-setup-modal-actions button:hover:not(:disabled) {
+  background: #504945;
+}
+
+.document-listen-setup-modal-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.document-listen-setup-modal-actions .document-listen-setup-modal-primary {
+  background: #458588;
+  border-color: #458588;
+  color: #fbf1c7;
+}
+
+.document-listen-setup-modal-actions .document-listen-setup-modal-primary:hover:not(:disabled) {
+  background: #689d6a;
+  border-color: #689d6a;
+}
+
+.document-listen-setup-modal-error {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: #fb4934;
+}

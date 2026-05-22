@@ -1,0 +1,278 @@
+.app-toolbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 50px;
+  margin: 0;
+  padding: 0 2px;
+  overflow: hidden;
+}
+
+.app-toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.app-toolbar-group-right {
+  margin-left: 6px;
+  flex-shrink: 0;
+}
+
+.app-toolbar-zone {
+  min-width: 0;
+}
+
+.app-toolbar-zone-center {
+  flex: 1;
+}
+
+.app-toolbar-center-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-app-region: no-drag;
+}
+
+.app-toolbar-center-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.app-toolbar-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: max-content;
+  padding: 2px 0;
+}
+
+.app-toolbar-ribbon-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-right: 10px;
+  padding: 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--bg-secondary) 80%, rgb(0,0,0));
+  box-shadow: 0 0 0 color-mix(in srgb, var(--bg-elevated) 100%, transparent);
+}
+
+.app-toolbar-ribbon-group-undo-redo {
+  justify-content: space-between;
+  min-width: 62px;
+}
+
+.app-toolbar-ribbon-group-undo-redo .app-toolbar-button-compact {
+  width: 100%;
+  height: 22px;
+  min-height: 22px;
+  max-height: 22px;
+  padding: 0 6px;
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+.app-toolbar-icon-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.app-toolbar-icon-row-single {
+  justify-content: center;
+}
+
+.app-toolbar-icon-row .app-toolbar-button:not(.app-toolbar-button-compact) {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+}
+
+.app-toolbar-icon-row .app-toolbar-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.app-toolbar-icon-row .app-toolbar-button-header span,
+.app-toolbar-icon-row .app-toolbar-mermaid-button span {
+  font-size: 10px;
+}
+
+.app-toolbar-ribbon-label {
+  display: none;
+}
+
+.app-toolbar-spacer {
+  display: none;
+}
+
+.app-toolbar-button,
+.app-toolbar-avatar-button {
+  -webkit-app-region: no-drag;
+  border: 1px solid color-mix(in srgb, var(--border-default) 78%, transparent);
+  background: color-mix(in srgb, var(--bg-primary) 74%, transparent);
+  color: var(--text-primary);
+  min-width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 8px;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.app-toolbar-button:hover,
+.app-toolbar-avatar-button:hover,
+.app-toolbar-button:focus-visible,
+.app-toolbar-avatar-button:focus-visible {
+  background: color-mix(in srgb, var(--bg-secondary) 74%, transparent);
+  border-color: color-mix(in srgb, var(--border-default) 100%, transparent);
+  outline: none;
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--bg-elevated) 18%, transparent);
+}
+
+.app-toolbar-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.app-toolbar-button-search {
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 190px;
+  height: 34px;
+  padding: 0 10px;
+  margin-left: 2px;
+  margin-right: 8px;
+  border-radius: 10px;
+  border-color: color-mix(in srgb, var(--text-ui) 90%, transparent);
+  background: color-mix(in srgb, var(--bg-secondary) 42%, transparent);
+}
+
+.app-toolbar-button-compact {
+  min-width: 30px;
+  height: 22px;
+  padding: 0 6px;
+}
+
+.app-toolbar-button-label {
+  font-size: 12px;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--text-primary) 92%, transparent);
+}
+
+.app-toolbar-button-header span,
+.app-toolbar-mermaid-button span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.app-toolbar-kbd {
+  margin-left: auto;
+  font-size: 10px;
+  color: color-mix(in srgb, var(--text-secondary) 90%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border-default) 76%, transparent);
+  border-radius: 999px;
+  padding: 1px 6px;
+  background: color-mix(in srgb, var(--bg-elevated) 42%, transparent);
+}
+
+.app-toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background: color-mix(in srgb, var(--border-subtle) 66%, transparent);
+}
+
+.app-toolbar-org {
+  font-size: 11px;
+  color: color-mix(in srgb, var(--text-secondary) 92%, transparent);
+  margin-right: 4px;
+  padding: 0 2px;
+}
+
+.app-toolbar-avatar-button {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  padding: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-right: 4px;
+}
+
+.app-toolbar-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.app-toolbar-avatar-fallback {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.app-toolbar-signin {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 74%, transparent);
+  background: color-mix(in srgb, var(--bg-primary) 82%, transparent);
+  margin-right: 4px;
+}
+
+.app-toolbar-menu-popup {
+  min-width: 170px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 86%, transparent);
+  background: color-mix(in srgb, var(--bg-primary) 82%, transparent);
+  border-radius: 12px;
+  padding: 6px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.34);
+  z-index: 3000;
+}
+
+.app-toolbar-menu-positioner {
+  z-index: 3000 !important;
+}
+
+.app-toolbar-menu-item {
+  -webkit-app-region: no-drag;
+  border-radius: 8px;
+  padding: 8px 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  user-select: none;
+  cursor: pointer;
+}
+
+.app-toolbar-menu-item:hover,
+.app-toolbar-menu-item[data-highlighted] {
+  background: color-mix(in srgb, var(--bg-secondary) 76%, transparent);
+}
+
+.app-toolbar-error {
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  color: color-mix(in srgb, #f38ba8 88%, var(--text-primary) 12%);
+  border: 1px solid color-mix(in srgb, #f38ba8 36%, transparent);
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: color-mix(in srgb, #f38ba8 8%, transparent);
+}

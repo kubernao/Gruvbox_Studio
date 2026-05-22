@@ -1,0 +1,10 @@
+C:\Users\isick\Desktop\Gruvbox\Gruvbox Studio\src-rust\target\debug\deps\markup5ever-ff26b59d4833021b.d: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\interface\mod.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\interface\tree_builder.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\serialize.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\util\buffer_queue.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\util\smallcharset.rs
+
+C:\Users\isick\Desktop\Gruvbox\Gruvbox Studio\src-rust\target\debug\deps\libmarkup5ever-ff26b59d4833021b.rmeta: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\interface\mod.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\interface\tree_builder.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\serialize.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\util\buffer_queue.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\util\smallcharset.rs
+
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\lib.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\interface\mod.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\interface\tree_builder.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\serialize.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\util\buffer_queue.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\markup5ever-0.35.0\util\smallcharset.rs:

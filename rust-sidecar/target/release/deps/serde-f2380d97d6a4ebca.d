@@ -1,0 +1,14 @@
+C:\Users\isick\Desktop\Gruvbox Studio\src-rust\target\release\deps\serde-f2380d97d6a4ebca.d: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Users\isick\Desktop\Gruvbox\ Studio\src-rust\target\release\build\serde-f5fdd96316a883c4\out/private.rs
+
+C:\Users\isick\Desktop\Gruvbox Studio\src-rust\target\release\deps\libserde-f2380d97d6a4ebca.rlib: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Users\isick\Desktop\Gruvbox\ Studio\src-rust\target\release\build\serde-f5fdd96316a883c4\out/private.rs
+
+C:\Users\isick\Desktop\Gruvbox Studio\src-rust\target\release\deps\libserde-f2380d97d6a4ebca.rmeta: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Users\isick\Desktop\Gruvbox\ Studio\src-rust\target\release\build\serde-f5fdd96316a883c4\out/private.rs
+
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs:
+C:\Users\isick\Desktop\Gruvbox\ Studio\src-rust\target\release\build\serde-f5fdd96316a883c4\out/private.rs:
+
+# env-dep:OUT_DIR=C:\\Users\\isick\\Desktop\\Gruvbox Studio\\src-rust\\target\\release\\build\\serde-f5fdd96316a883c4\\out

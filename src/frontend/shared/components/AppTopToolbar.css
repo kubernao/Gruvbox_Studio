@@ -1,0 +1,57 @@
+:root {
+  --app-top-toolbar-height: 62px;
+  --right-sidebar-top-width: 0px;
+}
+
+.app-top-toolbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 62px;
+  border-bottom: none;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-app-region: drag;
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  padding: 4px 8px;
+  overflow: hidden;
+}
+
+.app-top-toolbar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--right-sidebar-top-width, 0px);
+  height: 100%;
+  background: var(--bg-sidebar);
+  border-left: 1px solid var(--border-default);
+  pointer-events: none;
+}
+
+.app-top-toolbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - var(--right-sidebar-top-width, 0px));
+  height: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-right: auto;
+  border-bottom: 1px solid color-mix(in srgb, var(--border-subtle) 72%, transparent);
+  background: color-mix(in srgb, var(--bg_h) 92%, transparent);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+}
+
+/* Interactive controls must opt out of drag so they stay clickable (Electron). */
+.app-top-toolbar-inner button,
+.app-top-toolbar-inner input,
+.app-top-toolbar-inner a {
+  -webkit-app-region: no-drag;
+}

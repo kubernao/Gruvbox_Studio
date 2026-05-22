@@ -1,0 +1,10 @@
+C:\Users\isick\Desktop\Gruvbox Studio\src-rust\target\debug\deps\napi_derive-2d33660adb4ec404.d: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\compat_macro.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\expand.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\parser\mod.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\parser\attrs.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\expand\napi.rs
+
+C:\Users\isick\Desktop\Gruvbox Studio\src-rust\target\debug\deps\napi_derive-2d33660adb4ec404.dll: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\compat_macro.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\expand.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\parser\mod.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\parser\attrs.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\expand\napi.rs
+
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\lib.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\compat_macro.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\expand.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\parser\mod.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\parser\attrs.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\napi-derive-2.16.13\src\expand\napi.rs:

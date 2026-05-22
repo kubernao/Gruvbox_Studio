@@ -1,0 +1,1 @@
+C:\Users\isick\Desktop\Gruvbox\ Studio\src-rust\target\debug\gruvbox_file_ops.dll: C:\Users\isick\Desktop\Gruvbox\ Studio\src-rust\src\error.rs C:\Users\isick\Desktop\Gruvbox\ Studio\src-rust\src\file_ops.rs C:\Users\isick\Desktop\Gruvbox\ Studio\src-rust\src\lib.rs C:\Users\isick\Desktop\Gruvbox\ Studio\src-rust\src\watcher.rs

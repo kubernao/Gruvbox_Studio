@@ -1,0 +1,166 @@
+.document-tablist-wrapper-react {
+  position: relative;
+  border-radius: 10px 10px 0 0;
+  /* Allow horizontal scroll; avoid clipping tab row (was overflow:hidden + fixed 31px) */
+  overflow-x: auto;
+  overflow-y: visible;
+  flex-shrink: 0;
+  z-index: 3001;
+  margin-bottom: -1px;
+}
+
+.document-tablist-wrapper-react::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  bottom: -1px;
+  background: var(--bg);
+  pointer-events: none;
+  z-index: 100;
+}
+
+.document-tab-container-react {
+  width: 100%;
+  min-height: 24px;
+  padding: 0 64px 0 36px;
+  align-items: stretch;
+  background-color: transparent;
+  display: flex;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: visible;
+  border-radius: 10px 10px 0 0;
+  box-sizing: border-box;
+}
+
+.document-tablist-wrapper-react,
+.document-tab-container-react {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.document-tablist-wrapper-react::-webkit-scrollbar,
+.document-tab-container-react::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.history-preview-tab-close-button {
+  position: absolute;
+  top: -4px;
+  right: 6px;
+  z-index: 3100;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 36px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.history-preview-tab-close-button:hover {
+  background-color: transparent;
+}
+
+.document-tab-react {
+  --document-tab-position: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: fit-content;
+  max-width: 200px;
+  min-height: 24px;
+  padding: 0 6px;
+  margin-top: 0;
+  margin-bottom: 1px;
+  line-height: 1.2;
+  box-sizing: border-box;
+  border-radius: 10px 10px 0 0;
+  /* All inactive tabs share the same dark-grey border for a uniform look. */
+  border: 1px solid color-mix(in srgb, var(--border-strong) 70%, #a0a0a0 30%);
+  border-bottom: none;
+  background-color: var(--bg);
+  cursor: grab;
+  user-select: none;
+  position: relative;
+  overflow: visible;
+  transition: 0.2s background-color ease;
+}
+
+.document-tab-react:hover {
+  background-color: var(--bg-button-hover);
+}
+
+.document-tab-react.active {
+  border: 1px solid var(--accent-highlight);
+  border-bottom-color: var(--bg-editor-surround);
+  background-color: var(--bg-editor-surround);
+  margin-bottom: 0;
+}
+
+.document-tab-react.dragover {
+  box-shadow: inset 0 0 0 1px var(--accent-highlight);
+}
+
+.document-tab-react.dragging {
+  opacity: 0.65;
+}
+
+.filename-react {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 550;
+  position: relative;
+  margin-left: 10px;
+  margin-top: 5px;
+  margin-bottom: 1px;
+  z-index: 2;
+}
+
+.document-tab-react.modified .filename-react::before {
+  content: '* ';
+}
+
+.tab-pin-react,
+.tab-close-react {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  padding: 1px 2px;
+  border-radius: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.tab-pin-react:hover,
+.tab-close-react:hover {
+  background-color: var(--bg-button-hover);
+  color: var(--text-primary);
+}
+
+.unsaved-indicator-react {
+  color: var(--accent-highlight);
+}
+
+.tab-filler-react {
+  flex: 1;
+  min-width: 0;
+  background-color: transparent;
+}

@@ -1,0 +1,12 @@
+C:\Users\isick\Desktop\Gruvbox\Gruvbox Studio\src-rust\target\debug\deps\mac-53f6b3e35266af18.d: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\test.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\mem.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\format.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\syntax_ext.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\matches.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\inspect.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\cfg.rs
+
+C:\Users\isick\Desktop\Gruvbox\Gruvbox Studio\src-rust\target\debug\deps\libmac-53f6b3e35266af18.rmeta: C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\lib.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\test.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\mem.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\format.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\syntax_ext.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\matches.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\inspect.rs C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\cfg.rs
+
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\lib.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\test.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\mem.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\format.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\syntax_ext.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\matches.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\inspect.rs:
+C:\Users\isick\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\mac-0.1.1\src\cfg.rs:

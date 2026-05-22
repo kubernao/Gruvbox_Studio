@@ -1,0 +1,131 @@
+.file-tree-node-container {
+  user-select: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-tree-node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  min-height: 30px;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background-color 0.15s ease;
+  width: 100%;
+  min-width: 0;
+}
+
+.file-tree-node:hover {
+  background-color: var(--bg-hover);
+}
+
+.file-tree-node.drag-over {
+  outline: 1px dashed var(--accent-primary, #83a598);
+  outline-offset: -2px;
+  background-color: rgba(131, 165, 152, 0.12);
+}
+
+.file-tree-node.selected {
+  background-color: transparent;
+  color: var(--text-primary);
+}
+
+.file-tree-node.selected .file-name {
+  background-color: rgba(211, 134, 155, 0.12);
+  padding: 4px 5px;
+  border-radius: 4px;
+  width: fit-content;
+  flex: 0 1 auto;
+}
+
+.chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  transition: transform 0.15s ease;
+  cursor: pointer;
+}
+
+.chevron.expanded {
+  transform: rotate(90deg);
+}
+
+.chevron-placeholder {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.file-icon {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.file-icon.folder-icon {
+  box-sizing: content-box;
+  color: var(--orange-dim);
+  font-size: 16px;
+  height: 1em;
+  width: 1em;
+}
+
+.file-icon.code-icon {
+  color: var(--aqua-dim);
+}
+
+.file-icon.markdown-icon {
+  color: var(--blue);
+}
+
+.file-icon.text-icon {
+  color: var(--yellow-dim);
+}
+
+.file-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.file-tree-children {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.explorer-context-menu {
+  position: fixed;
+  z-index: 1000;
+  min-width: 140px;
+  padding: 4px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--bg-hover);
+  border-radius: 6px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+}
+
+.explorer-context-menu-item {
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.explorer-context-menu-item:hover {
+  background: var(--bg-hover);
+}
