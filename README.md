@@ -12,8 +12,6 @@
 
 > **Early preview.** Gruvbox Studio is under active development. Build from source today, or follow releases on the [landing site](https://gruvbox.studio/) and project Discord.
 
-Part of the [Gruvbox](https://github.com/kubernao/Gruvbox) monorepo (with [Gruvbox Landing](https://github.com/kubernao/Gruvbox_landing)).
-
 ## Table of contents
 
 - [Overview](#overview)
@@ -147,8 +145,6 @@ npm run qa:fast       # Quick CI-style gate
 ```
 
 Initialize submodules after clone. If Gruvie reports “Pi CLI not found”, run `npm run build:pi` again.
-
-See [CONTRIBUTING.md](../CONTRIBUTING.md) in the monorepo root when developing from a full Gruvbox checkout, or open a PR against this repository.
 
 ## Documentation
 
