@@ -840,6 +840,13 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
     uiPolicy.aiDiffPresentation !== 'triple',
   );
 
+  // AI sessions with a base revision load the proposal on the right (source / worktree)
+  // while merge polarity still marks "left" as preferred — wire bulk actions accordingly.
+  const onBulkAcceptAll =
+    aiProposedEdits && hashBase?.trim() ? rejectAll : acceptAll;
+  const onBulkRejectAll =
+    aiProposedEdits && hashBase?.trim() ? acceptAll : rejectAll;
+
   return (
     <div className="diff-viewer" data-testid="diff-viewer-root">
       <div className="diff-card">
@@ -863,8 +870,8 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
             acceptAll: uiPolicy.labels.acceptAllTitle,
             rejectAll: uiPolicy.labels.rejectAllTitle,
           }}
-          onAcceptAll={acceptAll}
-          onRejectAll={rejectAll}
+          onAcceptAll={onBulkAcceptAll}
+          onRejectAll={onBulkRejectAll}
           onSave={handleExplicitSave}
           onClose={onClose}
           mergeUsesMonacoEditor

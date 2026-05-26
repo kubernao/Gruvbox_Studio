@@ -13,8 +13,8 @@
  *
  *   C1 — two-pane non-AI git diff: accept all takes the right (new) side
  *   C2 — two-pane non-AI git diff: reject all takes the left (old) side
- *   C3 — two-pane AI proposal: accept all takes the left (AI) side
- *   C4 — two-pane AI proposal: reject all takes the right (existing) side
+ *   C3 — two-pane AI proposal: accept all takes the right (AI) side
+ *   C4 — two-pane AI proposal: reject all takes the left (existing) side
  *   C5 — legacy triple AI proposal: accept-all flows through state, not setModifiedValue
  *   C6 — dual-diff triple: accept-all flows through state for the dual-AI merge path
  *
@@ -184,33 +184,33 @@ describe('DiffViewer accept-all / reject-all paths', () => {
   });
 
   /**
-   * C3 — Two-pane AI proposed edits. With `aiProposedEdits=true` the polarity
-   * flips: accepting AI = take the left side (AI proposal). The session uses
-   * the two-pane Monaco editor because `aiDiffPresentation` defaults to
+   * C3 — Two-pane AI proposed edits with a base revision. The AI proposal is on
+   * the right snapshot; Accept all must apply that side. The session uses the
+   * two-pane Monaco editor because `aiDiffPresentation` defaults to
    * `'twoPane'`, so the write still goes through `setModifiedValue`.
    */
-  it('two-pane AI proposal: Accept all writes the LEFT (AI) snapshot to the modified buffer', async () => {
+  it('two-pane AI proposal: Accept all writes the RIGHT (AI) snapshot to the modified buffer', async () => {
     render(<DiffViewer {...buildProps({ hashBase: 'base-hash', aiProposedEdits: true })} />);
     await waitFor(() => expect(screen.getByTestId('mock-monaco-diff-editor')).toBeTruthy());
 
     fireEvent.click(screen.getByTitle(/Merge into file/i));
     fireEvent.click(screen.getByText('Accept all'));
 
-    expect(monacoHandle.setModifiedValue).toHaveBeenLastCalledWith(SNAPSHOT.left);
+    expect(monacoHandle.setModifiedValue).toHaveBeenLastCalledWith(SNAPSHOT.right);
   });
 
   /**
    * C4 — Two-pane AI proposal: reject-all path. Polarity flip of C3 — rejecting
-   * AI takes the right (user's existing) side.
+   * AI keeps the left (base / existing) side.
    */
-  it('two-pane AI proposal: Reject all writes the RIGHT (existing) snapshot to the modified buffer', async () => {
+  it('two-pane AI proposal: Reject all writes the LEFT (existing) snapshot to the modified buffer', async () => {
     render(<DiffViewer {...buildProps({ hashBase: 'base-hash', aiProposedEdits: true })} />);
     await waitFor(() => expect(screen.getByTestId('mock-monaco-diff-editor')).toBeTruthy());
 
     fireEvent.click(screen.getByTitle(/Merge into file/i));
     fireEvent.click(screen.getByText('Reject all'));
 
-    expect(monacoHandle.setModifiedValue).toHaveBeenLastCalledWith(SNAPSHOT.right);
+    expect(monacoHandle.setModifiedValue).toHaveBeenLastCalledWith(SNAPSHOT.left);
   });
 
   it('AI proposal without base loads the current repo and AI worktree contents', async () => {
@@ -275,7 +275,7 @@ describe('DiffViewer accept-all / reject-all paths', () => {
     fireEvent.click(screen.getByText('Accept all'));
 
     await waitFor(() => {
-      expect(lastMergePaneProps?.mergeResultContent).toBe(SNAPSHOT.left);
+      expect(lastMergePaneProps?.mergeResultContent).toBe(SNAPSHOT.right);
     });
     // No two-pane editor ref calls allowed in this path
     expect(monacoHandle.setModifiedValue.mock.calls.length).toBe(setModifiedCallsBefore);

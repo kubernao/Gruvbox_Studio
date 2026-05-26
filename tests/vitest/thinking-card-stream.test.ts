@@ -7,7 +7,6 @@ import { describe, it, expect } from 'vitest';
 import {
   appendToThinkingCard,
   buildThinkingMarker,
-  migrateLegacyThinkingToContent,
 } from '../../src/frontend/features/assistant/utils/thinkingCardStream';
 import { renderAssistantContent } from '../../src/frontend/shared/ai/aiChatRender';
 
@@ -59,20 +58,6 @@ describe('appendToThinkingCard', () => {
     const toolIdx = content.indexOf('[[GVX_TOOL:');
     expect(lastIdx).toBeGreaterThan(toolIdx);
     expect(extractThinkingBody(content.slice(lastIdx))).toBe('after tool');
-  });
-});
-
-describe('migrateLegacyThinkingToContent', () => {
-  it('prepends a marker when legacy thinking exists', () => {
-    const result = migrateLegacyThinkingToContent('answer', 'legacy think');
-    expect(extractThinkingBody(result)).toBe('legacy think');
-    expect(result).toContain('answer');
-  });
-
-  it('does not duplicate when markers already exist', () => {
-    const withMarker = buildThinkingMarker('inline') + 'answer';
-    const result = migrateLegacyThinkingToContent(withMarker, 'legacy');
-    expect(countThinkingMarkers(result)).toBe(1);
   });
 });
 

@@ -17,7 +17,6 @@ import {
 import { formatPiUserMessage } from '../../shared/assistant-protocol/piFriendlyErrors';
 import { usePiSession, type AssistantMessage as AIMessage } from './hooks/usePiSession';
 import { useStickyScrollBottom } from './hooks/useStickyScrollBottom';
-import { migrateLegacyThinkingToContent } from './utils/thinkingCardStream';
 import type { PiExtensionUiRequest } from '../../shared/assistant-protocol/piEventTypes';
 import { useAssistantCredentialsState } from './hooks/useAssistantCredentialsState';
 import { chooseMergeOpenPath, isRepoRelativePath } from './utils/mergeOpenPath';
@@ -117,18 +116,10 @@ function buildHistoryMessagesForSave(
       if (m.role !== 'user' && m.role !== 'assistant') {
         return false;
       }
-      const answer =
-        m.role === 'assistant'
-          ? migrateLegacyThinkingToContent(m.content, m.thinkingContent).trim()
-          : m.content.trim();
-      return answer !== '';
+      return m.content.trim() !== '';
     })
     .map((m) => {
-      const content =
-        m.role === 'assistant'
-          ? migrateLegacyThinkingToContent(m.content, m.thinkingContent)
-          : m.content;
-      return { role: m.role as 'user' | 'assistant', content };
+      return { role: m.role as 'user' | 'assistant', content: m.content };
     });
   const draft = draftText.trim();
   if (draft !== '') {
@@ -383,8 +374,7 @@ const AIAssistantTab: React.FC = () => {
       if (!isLiveAssistant) {
         continue;
       }
-      const renderedContent = migrateLegacyThinkingToContent(m.content, m.thinkingContent);
-      nextStable.set(m.id, assistantStreamPlainCharCount(renderedContent));
+      nextStable.set(m.id, assistantStreamPlainCharCount(m.content));
     }
     streamTextStableLengthRef.current = nextStable;
   }, [isStreaming, liveAssistantMessageId, messages]);
@@ -465,19 +455,12 @@ const AIAssistantTab: React.FC = () => {
             if (entry.role !== 'user' && entry.role !== 'assistant') {
               return false;
             }
-            const content = migrateLegacyThinkingToContent(
-              entry.content,
-              typeof entry.thinkingContent === 'string' ? entry.thinkingContent : undefined,
-            );
-            return content.trim() !== '';
+            return entry.content.trim() !== '';
           })
           .map((entry, index) => ({
             id: `${entry.role}-${raw.session?.chatInstanceId ?? 'history'}-${index}-${Date.now()}`,
             role: entry.role,
-            content: migrateLegacyThinkingToContent(
-              entry.content,
-              typeof entry.thinkingContent === 'string' ? entry.thinkingContent : undefined,
-            ),
+            content: entry.content,
           }));
         setMessages(restoredMessages);
         setInputText('');
@@ -1113,12 +1096,11 @@ const AIAssistantTab: React.FC = () => {
                   </div>
                 );
               }
-              const renderedContent = migrateLegacyThinkingToContent(m.content, m.thinkingContent);
               const isLiveAssistantStream =
                 Boolean(m.isStreaming) ||
                 (isStreaming && m.id === liveAssistantMessageId);
               const showThinkingLoader =
-                isLiveAssistantStream && !assistantHasAnswerContent(renderedContent);
+                isLiveAssistantStream && !assistantHasAnswerContent(m.content);
               const streamStableCharCount = isLiveAssistantStream
                 ? (streamTextStableLengthRef.current.get(m.id) ?? 0)
                 : undefined;
@@ -1129,7 +1111,7 @@ const AIAssistantTab: React.FC = () => {
                     <div
                       className={`ai-chat-bubble ai-chat-md${isLiveAssistantStream ? ' is-streaming' : ''}${showThinkingLoader ? ' ai-chat-bubble--pending' : ''}`}
                       dangerouslySetInnerHTML={{
-                        __html: renderAssistantContent(renderedContent, isLiveAssistantStream, {
+                        __html: renderAssistantContent(m.content, isLiveAssistantStream, {
                           streamStableCharCount,
                         }),
                       }}

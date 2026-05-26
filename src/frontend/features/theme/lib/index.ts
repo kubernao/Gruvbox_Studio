@@ -21,6 +21,3 @@ export {
   saveTheme,
   getSystemThemePreference,
 } from './themes/utils';
-
-// Components
-export { ThemeSwitcher } from './components/ThemeSwitcher/ThemeSwitcher';

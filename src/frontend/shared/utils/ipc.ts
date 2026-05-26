@@ -32,7 +32,7 @@ export type PiChatHistorySessionSummary = {
 };
 
 export type PiChatHistorySessionDetail = PiChatHistorySessionSummary & {
-  messages: Array<{ role: 'user' | 'assistant'; content: string; thinkingContent?: string }>;
+  messages: Array<{ role: 'user' | 'assistant'; content: string }>;
 };
 
 declare global {

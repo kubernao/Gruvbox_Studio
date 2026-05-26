@@ -18,8 +18,6 @@ export interface AssistantMessage {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
-  /** @deprecated Legacy sessions only; live turns embed thinking in `content`. */
-  thinkingContent?: string;
   isStreaming?: boolean;
 }
 

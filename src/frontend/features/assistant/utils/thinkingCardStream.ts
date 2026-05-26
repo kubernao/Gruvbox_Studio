@@ -38,15 +38,3 @@ export function appendToThinkingCard(content: string, appendBody: string): strin
   }
   return content.trimEnd() + buildThinkingMarker(appendBody);
 }
-
-/**
- * Merge legacy `thinkingContent` rows into inline markers for sessions saved
- * before thinking used the content timeline. Prepends one block when needed.
- */
-export function migrateLegacyThinkingToContent(content: string, thinkingContent?: string): string {
-  const think = (thinkingContent ?? '').trim();
-  if (think === '' || content.includes('[[GVX_THINK:')) {
-    return content;
-  }
-  return buildThinkingMarker(think) + content;
-}

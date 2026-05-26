@@ -7,6 +7,9 @@ const { IPC_INVOKE_ALLOWED_CHANNELS, IPC_EVENT_CHANNELS } = require('../../src/s
 
 test('ipc contract defines required invoke channels', () => {
   const expected = [
+    'credentials:get-status',
+    'credentials:set',
+    'credentials:clear',
     'git-provider',
     'github-git-auth-provider',
     'pi-gui',

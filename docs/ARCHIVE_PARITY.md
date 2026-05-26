@@ -1,6 +1,6 @@
 # Archive parity (Vue Git tab → React)
 
-This folder documents how the legacy **Claurst-era** Git sidebar in `archive/source/win-main/sidebar/` maps to the React implementation under `src/renderer/features/versionControl/`.
+This document maps the legacy **Claurst-era** Git sidebar in `archive/source/win-main/sidebar/` to the current React implementation under `src/frontend/features/git/`. The `archive/` tree is not shipped with this repo; pull it from the upstream revision when you need the original Vue sources.
 
 ## Layout in `archive/`
 
@@ -23,13 +23,12 @@ This folder documents how the legacy **Claurst-era** Git sidebar in `archive/sou
 | `git-tab-graph-model.ts` | `utils/gitTabGraphModel.ts` |
 | `git-tab-graph-heatmap-colors.ts` | `utils/gitTabGraphHeatmapColors.ts` |
 | `git-tab-graph-branch-colors.ts` | `utils/gitTabGraphBranchColors.ts` |
-| `git-tab-graph-layout.ts` (constants) | `utils/gitTabGraphLayout.ts` |
-| `git-graph-badge-label.ts` | `utils/gitGraphBadgeLabel.ts` |
-| `git-tab-graph.ts` `paintGitgraphDotSelection` | `utils/gitGraphSelectionPaint.ts` (adapted for `@gitgraph/react` DOM) |
-| `use-git-history-graph-sync.ts` | `hooks/useGitHistoryGraphSync.ts` |
-| `GitBranchPickerGraph.vue` | `components/GitBranchPickerGraph.tsx` |
-| `GitSidebarGraphHollowDot.vue` | `components/GitSidebarGraphHollowDot.tsx` |
-| `git-tab-graph-mount.ts` | Not ported 1:1 — React uses `@gitgraph/react` `<Gitgraph>`; lifecycle covered by `CommitGraphHost` + hook |
+| `git-tab-graph.ts` (import rows) | `utils/gitGraphUtils.ts` |
+| Graph mount / lifecycle | `components/CommitGraphRenderer.tsx` + `components/HistoryGraphSvg.tsx` (windowed lanes via `utils/windowLaneAllocator.ts`; full `commit-graph` fallback on allocation failure) |
+| Branch list UI | `components/BranchSection.tsx` |
+| Rust-accelerated graph context | `hooks/useGitTab.ts` → `rust:buildCommitGraph` IPC (see `docs/RUST_MIGRATION_PLAN.md`) |
+
+Removed during cleanup (never wired in production): branch-picker graph cluster (`GitBranchPickerGraph`, `GitSidebarGraphHollowDot`, `gitBranchPickerLayout`, `gitGraphSelectionPaint`, `gitTabGraphLayout`, `gitGraphBadgeLabel`).
 
 ## Data fields
 

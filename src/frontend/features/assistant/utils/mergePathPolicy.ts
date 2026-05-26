@@ -28,7 +28,7 @@ export function normalizeMergePathCandidate(rawPath: unknown): string {
   if (typeof rawPath !== 'string') {
     return '';
   }
-  const trimmed = rawPath.trim().replaceAll('\\', '/');
+  const trimmed = rawPath.trim().replace(/\\/g, '/');
   if (trimmed === '') {
     return '';
   }

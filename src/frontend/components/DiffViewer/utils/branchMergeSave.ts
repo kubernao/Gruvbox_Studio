@@ -235,8 +235,6 @@ async function completeMergeQueueOnTarget(
 ): Promise<BranchMergeSaveResult> {
   const repo = params.repoPath.trim();
   const rel = params.relativeFilePath.trim();
-  const targetBranch = params.targetBranch.trim();
-  const sourceBranch = params.sourceBranch.trim();
   const content = params.content;
 
   const wf = await writeRepoRelativeFile(repo, rel, content);

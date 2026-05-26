@@ -12,7 +12,6 @@ import {
 import {
   commitGraphDotCenterY,
   commitRowRelativeLabel,
-  getCommitNodesSortedByGraphRow,
 } from '../utils/commitGraphLayoutCompat';
 import { parseGitDecorationRefs } from '../utils/gitDecorationParse';
 import { allocateWindowLanes } from '../utils/windowLaneAllocator';
@@ -29,11 +28,10 @@ export interface CommitGraphRendererProps {
 
 /**
  * Slightly larger than commit-graph’s defaults, but compact enough to better
- * match the tightened legacy graph geometry.
+ * match the tightened graph geometry.
  * Must stay in sync with {@link commitGraphDotCenterY} via `graphStyle`.
  */
 const COMMIT_GRAPH_LAYOUT_SCALE = 1.2;
-const GIT_HISTORY_WINDOW_LANE_REUSE = true;
 const DEFAULT_STYLE: GraphStyle = {
   commitSpacing: Math.round(30 * COMMIT_GRAPH_LAYOUT_SCALE),
   branchSpacing: Math.round(15 * COMMIT_GRAPH_LAYOUT_SCALE),
@@ -42,7 +40,6 @@ const DEFAULT_STYLE: GraphStyle = {
 };
 const COMMIT_HOVER_CARD_OFFSET_Y = 6;
 const COMMIT_HOVER_CARD_FALLBACK_HEIGHT_PX = 224; // keep in sync with .git-commit-graph-cell__text max-height (14rem)
-type GraphRendererAdapter = 'legacy' | 'windowed';
 
 function branchNamesFromDecorations(raw: string): string[] {
   return parseGitDecorationRefs(raw).filter((ref) => {
@@ -118,9 +115,6 @@ export const CommitGraphRenderer: React.FC<CommitGraphRendererProps> = ({
     };
   }, [graphContext?.templateBranchColors]);
 
-  const adapter: GraphRendererAdapter = GIT_HISTORY_WINDOW_LANE_REUSE
-    ? 'windowed'
-    : 'legacy';
   const [windowEngineHealthy, setWindowEngineHealthy] = useState(true);
 
   const viewportRange = useWindowViewportState(
@@ -132,7 +126,7 @@ export const CommitGraphRenderer: React.FC<CommitGraphRendererProps> = ({
     new Map(),
   );
   const windowLaneAllocation = useMemo(() => {
-    if (!windowEngineHealthy || adapter !== 'windowed') {
+    if (!windowEngineHealthy) {
       return null;
     }
     const key = `${viewportRange.overscanStartRow}:${viewportRange.overscanEndRow}:${
@@ -157,27 +151,20 @@ export const CommitGraphRenderer: React.FC<CommitGraphRendererProps> = ({
     return next;
   }, [
     windowEngineHealthy,
-    adapter,
     viewportRange.overscanStartRow,
     viewportRange.overscanEndRow,
     graphData.commits,
     graphContext?.graphEdgeConnectivity,
   ]);
   useEffect(() => {
-    if (adapter !== 'windowed') return;
-    if (windowLaneAllocation !== null) return;
-    setWindowEngineHealthy(false);
-    setGitHistoryGraphError('Fell back to legacy graph renderer.');
-  }, [adapter, windowLaneAllocation, setGitHistoryGraphError]);
-
-  const legacyRows = useMemo(
-    () => getCommitNodesSortedByGraphRow(graphData.commits),
-    [graphData.commits],
-  );
-  const sortedRows = useMemo(() => {
-    if (adapter === 'legacy') {
-      return legacyRows;
+    if (windowLaneAllocation !== null) {
+      return;
     }
+    setWindowEngineHealthy(false);
+    setGitHistoryGraphError('Windowed lane allocation failed; using full CommitGraph fallback.');
+  }, [windowLaneAllocation, setGitHistoryGraphError]);
+
+  const sortedRows = useMemo(() => {
     const fallback = graphData.commits.map((c, i) => ({
       hash: c.sha,
       y: i,
@@ -202,7 +189,7 @@ export const CommitGraphRenderer: React.FC<CommitGraphRendererProps> = ({
       commitDate: new Date(0),
       commitColor: '',
     }));
-  }, [adapter, legacyRows, graphData.commits, windowLaneAllocation]);
+  }, [graphData.commits, windowLaneAllocation]);
 
   const selectedSet = useMemo(
     () => new Set(selectedHashes.map((h) => h.trim()).filter(Boolean)),
@@ -318,7 +305,7 @@ export const CommitGraphRenderer: React.FC<CommitGraphRendererProps> = ({
       className="git-version-graph-host git-version-graph-host--commit-graph"
       style={{ minHeight: layerHeightPx }}
     >
-      {adapter === 'legacy' || !windowEngineHealthy || windowLaneAllocation === null ? (
+      {!windowEngineHealthy || windowLaneAllocation === null ? (
         <CommitGraph
           commits={graphData.commits}
           branchHeads={graphData.branchHeads}

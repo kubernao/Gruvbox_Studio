@@ -228,7 +228,7 @@ let aiWorktreeSessionStoreApp = null;
  *   createdAtMs: number,
  *   updatedAtMs: number,
  *   previewText: string,
- *   messages: Array<{ role: 'user' | 'assistant', content: string, thinkingContent?: string }>,
+ *   messages: Array<{ role: 'user' | 'assistant', content: string }>,
  * }>} */
 const aiChatHistorySessions = new Map();
 
@@ -309,10 +309,24 @@ async function persistAiChatHistorySessions() {
 }
 
 /**
+ * One-time merge for persisted rows that stored reasoning in a separate
+ * `thinkingContent` field before inline `[[GVX_THINK:…]]` markers in `content`.
+ */
+function mergeLegacyThinkingIntoContent(content, thinkingRaw) {
+  const mergedContent = typeof content === 'string' ? content : '';
+  const thinkingContent = typeof thinkingRaw === 'string' ? thinkingRaw : '';
+  if (thinkingContent.trim() !== '' && !mergedContent.includes('[[GVX_THINK:')) {
+    return `\n\n[[GVX_THINK:${encodeURIComponent(thinkingContent)}]]\n\n${mergedContent}`;
+  }
+  return mergedContent;
+}
+
+/**
  * This function loads previously persisted chat history snapshots during app
  * startup and hydrates the in-memory map used by IPC handlers. Parse failures
  * are intentionally swallowed because history recovery is best-effort and must
- * never block the assistant from starting.
+ * never block the assistant from starting. Legacy `thinkingContent` rows are
+ * merged into `content` once and rewritten to disk.
  */
 async function loadPersistedAiChatHistorySessions() {
   const filePath = aiChatHistoryStorePath();
@@ -325,11 +339,31 @@ async function loadPersistedAiChatHistorySessions() {
     if (!parsed || typeof parsed !== 'object') {
       return;
     }
+    let migrated = false;
     for (const [key, value] of Object.entries(parsed)) {
       if (!value || typeof value !== 'object') {
         continue;
       }
-      aiChatHistorySessions.set(key, value);
+      const session = { ...value };
+      if (Array.isArray(session.messages)) {
+        const normalized = normalizeHistoryTranscriptMessages(
+          session.messages.map((entry) => ({
+            role: entry?.role,
+            content: mergeLegacyThinkingIntoContent(
+              entry?.content,
+              entry?.thinkingContent ?? entry?.thinking_content,
+            ),
+          })),
+        );
+        if (JSON.stringify(session.messages) !== JSON.stringify(normalized)) {
+          migrated = true;
+        }
+        session.messages = normalized;
+      }
+      aiChatHistorySessions.set(key, session);
+    }
+    if (migrated) {
+      await persistAiChatHistorySessions();
     }
   } catch {
     // best effort; keep empty state
@@ -349,13 +383,7 @@ function normalizeHistoryTranscriptMessages(messages) {
     .map((entry) => {
       const role = entry?.role === 'assistant' ? 'assistant' : entry?.role === 'user' ? 'user' : '';
       const content = typeof entry?.content === 'string' ? entry.content : '';
-      const thinkingRaw = entry?.thinkingContent ?? entry?.thinking_content;
-      const thinkingContent = typeof thinkingRaw === 'string' ? thinkingRaw : '';
-      let mergedContent = content;
-      if (thinkingContent.trim() !== '' && !mergedContent.includes('[[GVX_THINK:')) {
-        mergedContent = `\n\n[[GVX_THINK:${encodeURIComponent(thinkingContent)}]]\n\n${mergedContent}`;
-      }
-      return { role, content: mergedContent };
+      return { role, content };
     })
     .filter((entry) => {
       if (entry.role !== 'assistant' && entry.role !== 'user') {
