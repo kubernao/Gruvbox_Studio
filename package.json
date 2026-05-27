@@ -8,7 +8,7 @@
   "scripts": {
     "start": "electron-forge start",
     "build:prepare": "npm run build:pi && npm run build:rust",
-    "build:mac-icon": "bash scripts/sync-brand-icons-from-composer.sh",
+    "build:mac-icon": "bash scripts/build-macos-app-icon.sh",
     "build:from-source": "npm run build:prepare && npm run build:prod",
     "prepackage": "npm run build:prepare && npm run build:mac-icon",
     "premake": "npm run build:prepare && npm run build:mac-icon",

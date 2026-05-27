@@ -159,7 +159,7 @@
   align-items: flex-end;
 }
 
-.ai-chat-bubble--pending:empty {
+.ai-chat-bubble.ai-chat-md.is-streaming:empty {
   display: none;
 }
 
@@ -338,22 +338,44 @@
   word-break: break-word;
 }
 
+.ai-chat-md.is-streaming:not(:empty) {
+  animation: ai-chat-bubble-stream-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .ai-chat-md.is-streaming .ai-chat-stream-chunk,
 .ai-chat-md.is-streaming .ai-chat-stream-enter {
-  animation: ai-chat-stream-fade-in 0.38s ease-out forwards;
+  animation: ai-chat-stream-fade-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes ai-chat-bubble-stream-enter {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes ai-chat-stream-fade-in {
   from {
     opacity: 0;
+    transform: translateY(3px);
   }
 
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ai-chat-md.is-streaming:not(:empty) {
+    animation: none;
+  }
+
   .ai-chat-md.is-streaming .ai-chat-stream-chunk,
   .ai-chat-md.is-streaming .ai-chat-stream-enter {
     animation: none;

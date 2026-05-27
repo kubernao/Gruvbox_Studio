@@ -129,12 +129,14 @@ export function scrollTranscriptToBottomAnimated(
  * Keeps an AI chat transcript pinned to the bottom while the user remains near
  * the latest messages, and stops forcing scroll when they move up to read history.
  * Call `pinToBottom` when the user sends a message or restores a session so a
- * deliberate jump to the live edge resumes follow mode.
+ * deliberate jump to the live edge resumes follow mode. When `smoothWhileFollowing`
+ * is true, content-driven repins ease toward the bottom instead of jumping.
  */
 export function useStickyScrollBottom(
   scrollRef: React.RefObject<HTMLElement | null>,
   contentDeps: unknown[],
   scrollContainerMounted: boolean,
+  smoothWhileFollowing = false,
 ): { pinToBottom: () => void } {
   const followBottomRef = useRef(true);
   const isProgrammaticScrollRef = useRef(false);
@@ -143,12 +145,13 @@ export function useStickyScrollBottom(
   const scrollToBottomIfFollowing = useCallback(
     (element: HTMLElement): void => {
       isProgrammaticScrollRef.current = true;
-      scrollTranscriptToBottom(element, true);
+      const behavior = smoothWhileFollowing ? 'smooth' : 'instant';
+      scrollTranscriptToBottomAnimated(element, true, behavior);
       requestAnimationFrame(() => {
         isProgrammaticScrollRef.current = false;
       });
     },
-    [],
+    [smoothWhileFollowing],
   );
 
   const pinToBottom = useCallback((): void => {
@@ -156,10 +159,14 @@ export function useStickyScrollBottom(
     const el = scrollRef.current;
     if (el) {
       cancelSmoothTranscriptScroll();
-      scrollToBottomIfFollowing(el);
+      isProgrammaticScrollRef.current = true;
+      scrollTranscriptToBottom(el, true);
+      requestAnimationFrame(() => {
+        isProgrammaticScrollRef.current = false;
+      });
       lastUserScrollTopRef.current = el.scrollTop;
     }
-  }, [scrollRef, scrollToBottomIfFollowing]);
+  }, [scrollRef]);
 
   const releaseFollow = useCallback((): void => {
     followBottomRef.current = false;

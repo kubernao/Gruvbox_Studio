@@ -1,6 +1,35 @@
+const fs = require('node:fs');
 const path = require('node:path');
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
+
+/**
+ * Copies keytar into each packaged resources directory under node_modules so
+ * webpack externals (`require('keytar')`) resolve correctly at runtime.
+ */
+function installKeytarForRuntime(packageResult) {
+  const keytarSourceDir = path.resolve(__dirname, 'node_modules', 'keytar');
+  if (!fs.existsSync(keytarSourceDir)) {
+    throw new Error(`Expected keytar module at ${keytarSourceDir}`);
+  }
+
+  for (const outputPath of packageResult.outputPaths || []) {
+    let resourcesDir = path.join(outputPath, 'resources');
+    if (process.platform === 'darwin') {
+      const appBundleName = fs.readdirSync(outputPath).find((entry) => entry.endsWith('.app'));
+      if (!appBundleName) {
+        continue;
+      }
+      resourcesDir = path.join(outputPath, appBundleName, 'Contents', 'Resources');
+    }
+    if (!fs.existsSync(resourcesDir)) {
+      continue;
+    }
+    const targetDir = path.join(resourcesDir, 'node_modules', 'keytar');
+    fs.mkdirSync(path.dirname(targetDir), { recursive: true });
+    fs.cpSync(keytarSourceDir, targetDir, { recursive: true, force: true });
+  }
+}
 
 module.exports = {
   packagerConfig: {
@@ -8,12 +37,18 @@ module.exports = {
     extraResource: [
       'dist-rust',
       'submodules/pi-mono',
+      'node_modules/keytar',
       'resources/app-icon.png',
       'resources/app-icon-macos.png',
     ],
     icon: path.resolve(__dirname, 'resources/app-icon'),
   },
   rebuildConfig: {},
+  hooks: {
+    postPackage: async (_forgeConfig, packageResult) => {
+      installKeytarForRuntime(packageResult);
+    },
+  },
   makers: [
     {
       name: '@electron-forge/maker-squirrel',

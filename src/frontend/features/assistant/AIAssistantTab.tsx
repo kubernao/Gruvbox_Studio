@@ -3,11 +3,9 @@ import { History, Plane, Plus, Send, Settings, Square } from 'lucide-react';
 import { FileExplorerContext } from '../explorer/FileExplorerContext';
 import type { FileTreeNode } from '../explorer/types';
 import {
-  assistantHasAnswerContent,
   assistantStreamPlainCharCount,
   renderAssistantContent,
 } from '../../shared/ai/aiChatRender';
-import AiStreamingLoader from './AiStreamingLoader';
 import { useDiffViewer } from '../../shared/contexts/DiffViewerContext';
 import { useAiInlineReview } from '../../shared/contexts/AiInlineReviewContext';
 import {
@@ -354,7 +352,12 @@ const AIAssistantTab: React.FC = () => {
   const transcriptScrollRef = useRef<HTMLDivElement>(null);
   const streamTextStableLengthRef = useRef<Map<string, number>>(new Map());
   const hasConversation = messages.length > 0;
-  const { pinToBottom } = useStickyScrollBottom(transcriptScrollRef, [messages], hasConversation);
+  const { pinToBottom } = useStickyScrollBottom(
+    transcriptScrollRef,
+    [messages, isStreaming],
+    hasConversation,
+    isStreaming,
+  );
 
   const liveAssistantMessageId = useMemo(() => {
     for (let i = messages.length - 1; i >= 0; i -= 1) {
@@ -1099,17 +1102,14 @@ const AIAssistantTab: React.FC = () => {
               const isLiveAssistantStream =
                 Boolean(m.isStreaming) ||
                 (isStreaming && m.id === liveAssistantMessageId);
-              const showThinkingLoader =
-                isLiveAssistantStream && !assistantHasAnswerContent(m.content);
               const streamStableCharCount = isLiveAssistantStream
                 ? (streamTextStableLengthRef.current.get(m.id) ?? 0)
                 : undefined;
               return (
                 <div key={m.id} className="ai-chat-turn">
                   <div className="ai-chat-turn-body">
-                    {showThinkingLoader && <AiStreamingLoader />}
                     <div
-                      className={`ai-chat-bubble ai-chat-md${isLiveAssistantStream ? ' is-streaming' : ''}${showThinkingLoader ? ' ai-chat-bubble--pending' : ''}`}
+                      className={`ai-chat-bubble ai-chat-md${isLiveAssistantStream ? ' is-streaming' : ''}`}
                       dangerouslySetInnerHTML={{
                         __html: renderAssistantContent(m.content, isLiveAssistantStream, {
                           streamStableCharCount,
