@@ -84,6 +84,21 @@
   gap: 4px;
 }
 
+.app-toolbar-icon-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.app-toolbar-icon-row-balanced {
+  justify-content: center;
+}
+
+.app-toolbar-ribbon-group-file {
+  align-items: center;
+}
+
 .app-toolbar-icon-row-single {
   justify-content: center;
 }

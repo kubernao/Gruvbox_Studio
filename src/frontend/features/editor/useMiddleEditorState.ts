@@ -189,6 +189,42 @@ export function useMiddleEditorState() {
     });
   }, []);
 
+  /**
+   * Moves an open document buffer from one absolute path to another without
+   * reloading from disk. Used by Save As and explorer rename/move so tab keys
+   * stay aligned with on-disk locations.
+   */
+  const repointDocument = useCallback((fromPath: string, toPath: string) => {
+    if (fromPath === toPath) {
+      return;
+    }
+    setState((prev) => {
+      if (!prev.openDocuments.includes(fromPath)) {
+        return prev;
+      }
+      if (prev.openDocuments.includes(toPath)) {
+        return prev;
+      }
+      const moveRecord = <T,>(record: Record<string, T>): Record<string, T> => {
+        if (!(fromPath in record)) {
+          return record;
+        }
+        const next = { ...record, [toPath]: record[fromPath] };
+        delete next[fromPath];
+        return next;
+      };
+      return {
+        openDocuments: prev.openDocuments.map((path) => (path === fromPath ? toPath : path)),
+        activePath: prev.activePath === fromPath ? toPath : prev.activePath,
+        contentByPath: moveRecord(prev.contentByPath),
+        originalByPath: moveRecord(prev.originalByPath),
+        readonlyByPath: moveRecord(prev.readonlyByPath),
+        languageByPath: moveRecord(prev.languageByPath),
+        pinnedByPath: moveRecord(prev.pinnedByPath),
+      };
+    });
+  }, []);
+
   const activeDocument = useMemo<MiddleEditorDocument | null>(() => {
     if (state.activePath === null) {
       return null;
@@ -244,6 +280,7 @@ export function useMiddleEditorState() {
     markSaved,
     setBaselineOriginal,
     clearAll,
+    repointDocument,
     isDirty,
   };
 }

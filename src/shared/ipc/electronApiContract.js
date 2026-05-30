@@ -15,6 +15,7 @@ const ELECTRON_API_INVOKE_METHOD_CHANNELS = {
   showOpenDialog: 'dialog:openDirectory',
   pickExplorerSavePath: 'explorer:pick-save-path',
   confirmExplorerDelete: 'explorer:confirm-delete',
+  confirmUnsavedClose: 'explorer:confirm-unsaved-close',
   credentialsGetStatus: 'credentials:get-status',
   credentialsSet: 'credentials:set',
   credentialsClear: 'credentials:clear',

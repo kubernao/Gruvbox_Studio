@@ -19,6 +19,35 @@ test.describe('Editor layout', () => {
     await app.close();
   });
 
+  test('welcome ASCII logo sits slightly above editor pane center', async () => {
+    const { app, page } = await launchElectronApp();
+
+    await expect(page.locator('.editor-welcome')).toBeVisible({ timeout: 15_000 });
+    const metrics = await page.evaluate(() => {
+      const pane = document.querySelector('.editor-pane');
+      const welcome = document.querySelector('.editor-welcome');
+      const brand = document.querySelector('.editor-welcome-brand-stack');
+      const rect = (el: Element | null) => (el ? el.getBoundingClientRect() : null);
+      const pr = rect(pane);
+      const wr = rect(welcome);
+      const br = rect(brand);
+      const paneCenter = pr ? pr.top + pr.height / 2 : null;
+      const brandCenter = br ? br.top + br.height / 2 : null;
+      return {
+        brandOffsetFromPaneCenter:
+          paneCenter != null && brandCenter != null ? brandCenter - paneCenter : null,
+        welcomeFillsPane: pr && wr ? Math.abs(wr.height - pr.height) < 2 : false,
+      };
+    });
+
+    expect(metrics.welcomeFillsPane).toBe(true);
+    // Logo sits slightly above geometric center (deliberate upward bias).
+    expect(metrics.brandOffsetFromPaneCenter).toBeLessThan(4);
+    expect(metrics.brandOffsetFromPaneCenter).toBeGreaterThan(-80);
+
+    await app.close();
+  });
+
   test('Cmd/Ctrl+Shift+A toggles all layout chrome visible/collapsed', async () => {
     const { app, page } = await launchElectronApp();
     try {

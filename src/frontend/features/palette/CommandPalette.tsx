@@ -10,7 +10,7 @@ import React, {
 import { createPortal } from 'react-dom';
 import { FileExplorerContext } from '../explorer/FileExplorerContext';
 import { useDiffViewer } from '../../shared/contexts/DiffViewerContext';
-import { IPCService } from '../../shared/utils/ipc';
+import { openWorkspaceFolder } from '../editor/openWorkspaceFolder';
 import {
   buildCommandPaletteAllItems,
   buildDiffPaletteLineItemForQuery,
@@ -83,18 +83,7 @@ const CommandPalette: React.FC = () => {
   }, [isMenuLoading]);
 
   const runOpenFolder = useCallback(async (): Promise<void> => {
-    if (fileExplorer == null) {
-      return;
-    }
-    const result = await IPCService.showOpenDialog();
-    if (result.canceled || result.filePaths.length === 0) {
-      return;
-    }
-    const folderPath = result.filePaths[0];
-    if (typeof folderPath !== 'string' || folderPath.trim() === '') {
-      return;
-    }
-    await fileExplorer.setRootPath(folderPath);
+    await openWorkspaceFolder(fileExplorer);
   }, [fileExplorer]);
 
   const runRefreshTree = useCallback(async (): Promise<void> => {

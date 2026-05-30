@@ -18,6 +18,7 @@ import DocumentTabsReact, { DocumentTabItem } from './DocumentTabsReact';
 import MiddleContentHost from './MiddleContentHost';
 import {
   PALETTE_ACTION_EVENT,
+  dispatchPaletteAction,
   type PaletteActionEventDetail,
 } from '../palette/paletteActionEvents';
 import { setPalettePrereqs } from '../palette/palettePrereqStore';
@@ -30,6 +31,14 @@ import type { HistoryPreviewSession } from '../../shared/contexts/DiffViewerCont
 import './EditorPane.css';
 import { parentDirectoryFromFilePath } from '../../shared/utils/pathParts';
 import { StudioWelcomeHero } from './StudioWelcomeHero';
+import { registerEditorFileActionHandlers } from './editorActionRegistry';
+import { recordOpenedFile } from './recentOpenedFiles';
+import {
+  DOCUMENT_REPOINT_EVENT,
+  FILE_DELETED_EVENT,
+  type DocumentRepointDetail,
+  type FileDeletedDetail,
+} from './workspaceFileOpsEvents';
 import AudiobookGenerationModal from '../listen/AudiobookGenerationModal';
 import AudiobookPlaylistDock from '../listen/AudiobookPlaylistDock';
 import DocumentListenSetupModal from '../listen/DocumentListenSetupModal';
@@ -187,7 +196,7 @@ function prefixCurrentLine(view: EditorView, prefix: string): void {
 }
 
 const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseHistoryPreview }) => {
-  const { rootPath, selectedFile, selectedFileVersion, selectFile, refreshFileTree } = useFileExplorer();
+  const { rootPath, selectedFile, selectedFileVersion, selectFile, refreshFileTree, revealFileInTree, setRootPath } = useFileExplorer();
   const { showError, showSuccess, showWarning, showInfo } = useToast();
   const [isReadingFile, setIsReadingFile] = useState(false);
   const [isSavingFile, setIsSavingFile] = useState(false);
@@ -221,7 +230,7 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
     activeDocument,
     activePath,
     openOrActivateDocument,
-    clearAll,
+    repointDocument,
     replaceDocumentContent,
     closeDocument,
     selectDocument,
@@ -231,6 +240,7 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
     markSaved,
     setBaselineOriginal,
     isDirty,
+    openDocuments,
   } = middleEditor;
   const { session: inlineReviewSession, markApplied, updateSession, clearSession } = useAiInlineReview();
   const activeIsDirty =
@@ -356,9 +366,10 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
       skipNextDiskLoadForHistoryPreviewRef.current = false;
       setFileAccessError(null);
       setIsReadingFile(false);
-      clearAll();
       return;
     }
+
+    recordOpenedFile(selectedFile);
 
     if (inlineReviewSession && selectedFile !== inlineReviewSession.absolutePath) {
       skipNextDiskLoadForInlineAiRef.current = false;
@@ -449,7 +460,6 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
   }, [
     selectedFile,
     selectedFileVersion,
-    clearAll,
     openOrActivateDocument,
     showError,
     inlineReviewSession,
@@ -601,7 +611,6 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
       markSaved(activeDocument.path, contentToSave);
       dispatchWorkspaceFileSaved(activeDocument.path);
       setFileAccessError(null);
-      showSuccess('File saved successfully');
       // Clear any pending sync events since we just saved
       clearEvents();
     } catch (error) {
@@ -612,7 +621,131 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
       window.clearTimeout(hangTimer);
       setIsSavingFile(false);
     }
-  }, [activeDocument, markSaved, clearEvents, showError, showSuccess, showWarning]);
+  }, [activeDocument, markSaved, clearEvents, showError, showWarning]);
+
+  const saveDocumentAtPath = useCallback(
+    async (path: string): Promise<boolean> => {
+      const doc = documents.find((candidate) => candidate.path === path);
+      if (!doc) {
+        return false;
+      }
+      if (doc.fileType === 'pdf') {
+        showWarning('PDF documents are read-only in the editor.');
+        return false;
+      }
+      if (doc.isReadOnly) {
+        showWarning('This document is read-only and cannot be saved.');
+        return false;
+      }
+      try {
+        await IPCService.writeFile(path, doc.content);
+        markSaved(path, doc.content);
+        dispatchWorkspaceFileSaved(path);
+        return true;
+      } catch (error) {
+        const friendlyMessage = getFriendlyErrorMessage(error, 'write');
+        showError(friendlyMessage);
+        return false;
+      }
+    },
+    [activePath, documents, markSaved, showError, showWarning],
+  );
+
+  const handleSaveAs = useCallback(async () => {
+    if (!activeDocument) {
+      showWarning('No active document to save');
+      return;
+    }
+    if (activeDocument.fileType === 'pdf') {
+      showWarning('PDF documents are read-only in the editor.');
+      return;
+    }
+    if (activeDocument.isReadOnly) {
+      showWarning('This document is read-only and cannot be saved.');
+      return;
+    }
+    try {
+      const pick = await IPCService.pickExplorerSavePath({
+        intent: 'save-as',
+        currentPath: activeDocument.path,
+      });
+      if (pick.canceled) {
+        return;
+      }
+      const fromPath = activeDocument.path;
+      await IPCService.writeFile(pick.filePath, activeDocument.content);
+      repointDocument(fromPath, pick.filePath);
+      markSaved(pick.filePath, activeDocument.content);
+      dispatchWorkspaceFileSaved(pick.filePath);
+      selectFile(pick.filePath);
+      await refreshFileTree();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      showError(`Failed to save file: ${message}`);
+    }
+  }, [
+    activeDocument,
+    markSaved,
+    refreshFileTree,
+    repointDocument,
+    selectFile,
+    showError,
+    showWarning,
+  ]);
+
+  const closeDocumentWithGuard = useCallback(
+    async (path: string): Promise<boolean> => {
+      if (isDirty(path)) {
+        const fileName = path.split(/[\\/]/).pop() ?? path;
+        const result = await IPCService.confirmUnsavedClose({
+          message: `Save changes to "${fileName}"?`,
+          detail: 'Your changes will be lost if you do not save.',
+        });
+        if (result.choice === 'cancel') {
+          return false;
+        }
+        if (result.choice === 'save') {
+          const saved = await saveDocumentAtPath(path);
+          if (!saved) {
+            return false;
+          }
+        }
+      }
+
+      const remaining = openDocuments.filter((candidate) => candidate !== path);
+      const nextSelection =
+        selectedFile === path
+          ? remaining.length > 0
+            ? remaining[Math.max(remaining.length - 1, 0)]
+            : null
+          : selectedFile;
+
+      closeDocument(path);
+      if (selectedFile === path) {
+        if (nextSelection) {
+          selectFile(nextSelection);
+        }
+      }
+      return true;
+    },
+    [closeDocument, isDirty, openDocuments, saveDocumentAtPath, selectFile, selectedFile],
+  );
+
+  const handleCloseActiveTab = useCallback(async () => {
+    if (!activePath) {
+      return;
+    }
+    await closeDocumentWithGuard(activePath);
+  }, [activePath, closeDocumentWithGuard]);
+
+  const handleTabSelect = useCallback(
+    (path: string) => {
+      selectDocument(path);
+      selectFile(path);
+      revealFileInTree(path);
+    },
+    [revealFileInTree, selectDocument, selectFile],
+  );
 
   const handleOpenActivePdfExternally = useCallback(async () => {
     if (!activeDocument || activeDocument.fileType !== 'pdf') {
@@ -713,7 +846,11 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
     }
 
     try {
-      const siblings = await IPCService.listDirectory(rootPath);
+      const targetDirectory =
+        selectedFile != null && selectedFile.trim() !== ''
+          ? parentDirectoryFromFilePath(selectedFile)
+          : rootPath;
+      const siblings = await IPCService.listDirectory(targetDirectory);
       const existingNames = new Set(siblings.map((entry) => entry.name.toLowerCase()));
       let candidateName = 'untitled.md';
       let index = 1;
@@ -721,7 +858,7 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
         candidateName = `untitled-${index}.md`;
         index += 1;
       }
-      const targetPath = buildChildPath(rootPath, candidateName);
+      const targetPath = buildChildPath(targetDirectory, candidateName);
       await IPCService.writeFile(targetPath, '');
       await refreshFileTree();
       selectFile(targetPath);
@@ -731,7 +868,24 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
       showError(`Failed to create Markdown file: ${friendlyMessage}`);
       console.error('Failed to create Markdown file:', error);
     }
-  }, [refreshFileTree, rootPath, selectFile, showError, showSuccess, showWarning]);
+  }, [refreshFileTree, rootPath, selectFile, selectedFile, showError, showSuccess, showWarning]);
+
+  useEffect(() => {
+    return registerEditorFileActionHandlers({
+      save: () => {
+        void handleSave();
+      },
+      saveAs: () => {
+        void handleSaveAs();
+      },
+      closeTab: () => {
+        void handleCloseActiveTab();
+      },
+      newMarkdown: () => {
+        void handleNewMarkdownFile();
+      },
+    });
+  }, [handleCloseActiveTab, handleNewMarkdownFile, handleSave, handleSaveAs]);
 
   const handleExport = useCallback(
     async (format: 'html' | 'pdf' | 'docx') => {
@@ -1027,30 +1181,25 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
     [showSuccess, showWarning]
   );
 
-  // Setup save + document zoom shortcuts.
+  // Setup document zoom shortcuts (file ops are handled globally in useEditorFileShortcuts).
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!(e.ctrlKey || e.metaKey)) {
         return;
       }
-      const key = e.key;
-      if (key === 's' || key === 'S') {
-        e.preventDefault();
-        handleSave();
-        return;
-      }
+      const rawKey = e.key;
       const isZoomIn =
-        key === '+' ||
-        key === '=' ||
-        key === 'Add' ||
-        key === 'NumpadAdd' ||
-        (key === '_' && e.shiftKey);
+        rawKey === '+' ||
+        rawKey === '=' ||
+        rawKey === 'Add' ||
+        rawKey === 'NumpadAdd' ||
+        (rawKey === '_' && e.shiftKey);
       if (isZoomIn) {
         e.preventDefault();
         handleDocumentZoomIn();
         return;
       }
-      const isZoomOut = key === '-' || key === '_' || key === 'Subtract' || key === 'NumpadSubtract';
+      const isZoomOut = rawKey === '-' || rawKey === '_' || rawKey === 'Subtract' || rawKey === 'NumpadSubtract';
       if (isZoomOut) {
         e.preventDefault();
         handleDocumentZoomOut();
@@ -1059,7 +1208,7 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSave, handleDocumentZoomIn, handleDocumentZoomOut]);
+  }, [handleDocumentZoomIn, handleDocumentZoomOut]);
 
   useEffect(() => {
     setPalettePrereqs({
@@ -1108,14 +1257,6 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
   useEffect(() => {
     const onPalette = async (ev: Event): Promise<void> => {
       const ce = ev as CustomEvent<PaletteActionEventDetail>;
-      if (ce.detail?.action.kind === 'editor.save') {
-        void handleSave();
-        return;
-      }
-      if (ce.detail?.action.kind === 'editor.newMarkdown') {
-        void handleNewMarkdownFile();
-        return;
-      }
       if (ce.detail?.action.kind === 'editor.print') {
         void handlePrintActiveDocument();
         return;
@@ -1226,10 +1367,8 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
     handleExport,
     handleExportFileCopy,
     handleLanguageReviewAction,
-    handleNewMarkdownFile,
     handleOpenActivePdfExternally,
     handlePrintActiveDocument,
-    handleSave,
     showError,
     showSuccess,
     showWarning,
@@ -1269,10 +1408,48 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
     showError,
   ]);
 
+  useEffect(() => {
+    const onRepoint = (event: Event): void => {
+      const detail = (event as CustomEvent<DocumentRepointDetail>).detail;
+      if (detail == null) {
+        return;
+      }
+      repointDocument(detail.fromPath, detail.toPath);
+      if (selectedFile === detail.fromPath) {
+        selectFile(detail.toPath);
+      }
+    };
+    window.addEventListener(DOCUMENT_REPOINT_EVENT, onRepoint as EventListener);
+    return () => window.removeEventListener(DOCUMENT_REPOINT_EVENT, onRepoint as EventListener);
+  }, [repointDocument, selectFile, selectedFile]);
+
+  useEffect(() => {
+    const onDeleted = (event: Event): void => {
+      const detail = (event as CustomEvent<FileDeletedDetail>).detail;
+      if (detail == null) {
+        return;
+      }
+      if (openDocuments.includes(detail.path)) {
+        closeDocument(detail.path);
+      }
+    };
+    window.addEventListener(FILE_DELETED_EVENT, onDeleted as EventListener);
+    return () => window.removeEventListener(FILE_DELETED_EVENT, onDeleted as EventListener);
+  }, [closeDocument, openDocuments]);
+
   if (!activeDocument) {
     return (
       <div className="editor-pane">
-        <StudioWelcomeHero />
+        <StudioWelcomeHero
+          workspaceOpen={rootPath != null && rootPath.trim() !== ''}
+          onOpenFolder={() => dispatchPaletteAction({ kind: 'editor.openFolder' })}
+          onNewMarkdown={() => {
+            void handleNewMarkdownFile();
+          }}
+          onOpenRecentWorkspace={(path) => {
+            void setRootPath(path);
+          }}
+        />
       </div>
     );
   }
@@ -1332,8 +1509,10 @@ const EditorPane: React.FC<EditorPaneProps> = ({ historyPreview = null, onCloseH
             <DocumentTabsReact
               tabs={tabs}
               activePath={activePath}
-              onSelect={selectDocument}
-              onClose={closeDocument}
+              onSelect={handleTabSelect}
+              onClose={(path) => {
+                void closeDocumentWithGuard(path);
+              }}
               onReorder={reorderDocuments}
               onTogglePin={(path) => {
                 const doc = documents.find((candidate) => candidate.path === path);

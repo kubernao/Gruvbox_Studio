@@ -503,7 +503,7 @@ function explorerSafeBasename(name, fallback) {
 
 ipcMain.handle('explorer:pick-save-path', async (event, payload) => {
   const intent = typeof payload?.intent === 'string' ? payload.intent : '';
-  if (!['new-file', 'new-folder', 'rename'].includes(intent)) {
+  if (!['new-file', 'new-folder', 'rename', 'save-as'].includes(intent)) {
     return { canceled: true };
   }
   const win = getWindowForIpcEvent(event);
@@ -516,7 +516,7 @@ ipcMain.handle('explorer:pick-save-path', async (event, payload) => {
   const rawSuggested = typeof payload?.suggestedName === 'string' ? payload.suggestedName : '';
 
   let defaultPath = '';
-  if (intent === 'rename') {
+  if (intent === 'rename' || intent === 'save-as') {
     if (!currentPath) {
       return { canceled: true };
     }
@@ -534,12 +534,13 @@ ipcMain.handle('explorer:pick-save-path', async (event, payload) => {
     'new-file': 'Create new file',
     'new-folder': 'Create new folder',
     rename: 'Rename',
+    'save-as': 'Save As',
   };
 
   const result = await dialog.showSaveDialog(win, {
     title: titles[intent] ?? 'Save',
     defaultPath,
-    buttonLabel: intent === 'rename' ? 'Rename' : 'Create',
+    buttonLabel: intent === 'rename' ? 'Rename' : intent === 'save-as' ? 'Save' : 'Create',
     showsTagField: false,
   });
 
@@ -582,6 +583,29 @@ ipcMain.handle('explorer:confirm-delete', async (event, payload) => {
     cancelId: 1,
   });
   return { ok: response === 0 };
+});
+
+ipcMain.handle('explorer:confirm-unsaved-close', async (event, payload) => {
+  const message =
+    typeof payload?.message === 'string' && payload.message.trim() !== ''
+      ? payload.message.trim()
+      : 'Save changes before closing?';
+  const detail =
+    typeof payload?.detail === 'string' && payload.detail.trim() !== '' ? payload.detail.trim() : undefined;
+  const win = getWindowForIpcEvent(event);
+  if (!win) {
+    throw new Error('No BrowserWindow available for unsaved-close confirmation.');
+  }
+  const { response } = await dialog.showMessageBox(win, {
+    type: 'warning',
+    message,
+    detail,
+    buttons: ['Save', "Don't Save", 'Cancel'],
+    defaultId: 0,
+    cancelId: 2,
+  });
+  const choices = ['save', 'discard', 'cancel'];
+  return { choice: choices[response] ?? 'cancel' };
 });
 
 function buildExportDocumentHtml(renderedHtml, css = '') {
@@ -1044,8 +1068,17 @@ function getFlatApplicationMenuItems() {
 }
 
 /** Application menu so the palette can list native items on all platforms. */
+function dispatchRendererPaletteAction(kind) {
+  const win = BrowserWindow.getAllWindows()[0];
+  if (!win || win.isDestroyed()) {
+    return;
+  }
+  win.webContents.send(IPC_EVENT_CHANNELS.menuPaletteAction, { kind });
+}
+
 function buildGruvboxApplicationMenuTemplate() {
   const isMac = process.platform === 'darwin';
+  const mod = isMac ? 'Cmd' : 'Ctrl';
   const template = [
     ...(isMac
       ? [
@@ -1069,17 +1102,61 @@ function buildGruvboxApplicationMenuTemplate() {
       label: 'File',
       submenu: [
         {
+          id: 'file-open-folder',
+          label: 'Open Folder…',
+          accelerator: `${mod}+O`,
+          click: () => {
+            dispatchRendererPaletteAction('editor.openFolder');
+          },
+        },
+        { type: 'separator' },
+        {
           id: 'file-new-markdown',
           label: 'New Markdown File',
+          accelerator: `${mod}+N`,
           click: () => {
-            void requestRendererPalette({ mode: 'run', query: 'New Markdown file' });
+            dispatchRendererPaletteAction('editor.newMarkdown');
+          },
+        },
+        { type: 'separator' },
+        {
+          id: 'file-save',
+          label: 'Save',
+          accelerator: `${mod}+S`,
+          click: () => {
+            dispatchRendererPaletteAction('editor.save');
+          },
+        },
+        {
+          id: 'file-save-as',
+          label: 'Save As…',
+          accelerator: `${mod}+Shift+S`,
+          click: () => {
+            dispatchRendererPaletteAction('editor.saveAs');
           },
         },
         {
           id: 'file-export-copy',
           label: 'Export File Copy…',
           click: () => {
-            void requestRendererPalette({ mode: 'run', query: 'Export file copy' });
+            dispatchRendererPaletteAction('editor.exportFileCopy');
+          },
+        },
+        { type: 'separator' },
+        {
+          id: 'file-close-tab',
+          label: 'Close Tab',
+          accelerator: `${mod}+W`,
+          click: () => {
+            dispatchRendererPaletteAction('editor.closeTab');
+          },
+        },
+        {
+          id: 'file-quick-open',
+          label: 'Go to File…',
+          accelerator: `${mod}+P`,
+          click: () => {
+            dispatchRendererPaletteAction('editor.quickOpen');
           },
         },
         { type: 'separator' },

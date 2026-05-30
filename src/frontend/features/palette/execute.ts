@@ -84,10 +84,20 @@ export function getWorkspaceKnownFileRelatives(
   });
 }
 
+const DUPLICATE_MENU_PALETTE_IDS = new Set([
+  'id:file-open-folder',
+  'id:file-new-markdown',
+  'id:file-save',
+  'id:file-save-as',
+  'id:file-export-copy',
+  'id:file-close-tab',
+  'id:file-quick-open',
+]);
+
 function menuPaletteItems(rows: FlatMenuRow[]): PaletteItem[] {
   const filtered = rows.filter((row) => {
     const key = row.label.trim().toLowerCase();
-    return key !== '' && key !== 'command' && row.id !== 'id:file-new-markdown';
+    return key !== '' && key !== 'command' && !DUPLICATE_MENU_PALETTE_IDS.has(row.id);
   });
   return filtered.map((row) => ({
     id: `menu-${row.id}`,

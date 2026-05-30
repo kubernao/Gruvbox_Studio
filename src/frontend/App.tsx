@@ -9,6 +9,8 @@ import MainLayout from './shared/components/MainLayout';
 import ToastContainer from './shared/components/ToastContainer';
 import CommandPalette from './features/palette/CommandPalette';
 import AppToolbar from './shared/components/AppToolbar';
+import QuickOpenHost from './shared/components/QuickOpenHost';
+import FileOpsController from './features/editor/FileOpsController';
 import { isDarwin } from './features/palette/platform';
 import './App.css';
 
@@ -262,6 +264,7 @@ const App: React.FC = () => {
       <ThemeProvider initialTheme="dark">
         <ToastProvider>
           <FileExplorerProvider>
+            <FileOpsController />
             <DiffViewerProvider>
               <AiInlineReviewProvider>
               <div className="app-root">
@@ -270,6 +273,7 @@ const App: React.FC = () => {
                   onExitDiff={restoreLayoutAfterDiffClose}
                 />
                 <CommandPalette />
+                <QuickOpenHost />
                 {layoutState.showTopToolbar ? (
                   <AppToolbar />
                 ) : (

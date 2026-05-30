@@ -82,4 +82,27 @@ describe('useMiddleEditorState', () => {
     ]);
     expect(result.current.activePath).toBe('C:\\notes\\b.md');
   });
+
+  it('repoints an open document to a new absolute path', () => {
+    const { result } = renderHook(() => useMiddleEditorState());
+
+    act(() => {
+      result.current.openOrActivateDocument({
+        path: 'C:\\notes\\a.md',
+        content: '# draft',
+        language: 'markdown',
+        isReadOnly: false,
+      });
+      result.current.updateContent('C:\\notes\\a.md', '# draft edited');
+    });
+
+    act(() => {
+      result.current.repointDocument('C:\\notes\\a.md', 'C:\\notes\\b.md');
+    });
+
+    expect(result.current.openDocuments).toEqual(['C:\\notes\\b.md']);
+    expect(result.current.activePath).toBe('C:\\notes\\b.md');
+    expect(result.current.activeDocument?.content).toBe('# draft edited');
+    expect(result.current.isDirty('C:\\notes\\b.md')).toBe(true);
+  });
 });
