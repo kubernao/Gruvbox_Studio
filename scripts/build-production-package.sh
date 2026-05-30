@@ -184,7 +184,7 @@ build_mac_icons() {
   # This function refreshes platform icon assets before packaging so macOS and
   # other makers receive the current brand icons referenced by forge.config.js.
   print_step "Syncing brand icons"
-  bash "${PROJECT_ROOT}/scripts/build-macos-app-icon.sh"
+  bash "${PROJECT_ROOT}/scripts/sync-brand-icons-from-composer.sh"
 }
 
 make_distribution_artifacts() {

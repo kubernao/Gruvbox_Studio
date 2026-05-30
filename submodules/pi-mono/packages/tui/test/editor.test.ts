@@ -670,9 +670,9 @@ describe("Editor component", () => {
 			// Cursor should be at end (after B)
 			const lines = editor.render(width);
 
-			// The cursor (reverse video space) should be visible
+			// The cursor (underlined space) should be visible
 			const contentLine = lines[1]!;
-			assert.ok(contentLine.includes("\x1b[7m"), "Should have reverse video cursor");
+			assert.ok(contentLine.includes("\x1b[4m"), "Should have underline cursor");
 
 			// Line should still be correct width
 			assert.strictEqual(visibleWidth(contentLine), width);
@@ -703,7 +703,7 @@ describe("Editor component", () => {
 				let lines = editor.render(width + paddingX);
 				let contentLines = lines.slice(1, -1);
 				assert.strictEqual(contentLines.length, 1, "Should be 1 content line before wrap");
-				assert.ok(contentLines[0]!.endsWith("\x1b[7m \x1b[0m"), "Cursor should be at end of line");
+				assert.ok(contentLines[0]!.endsWith("\x1b[4m \x1b[24m"), "Cursor should be at end of line");
 
 				// Type 1 more → text wraps to second line
 				editor.handleInput("a");

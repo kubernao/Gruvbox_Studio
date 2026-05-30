@@ -3,7 +3,8 @@
 # Legacy fallback used when Icon Composer CLI export is unavailable: reads
 # resources/app-icon.png, scales down the raster, pads it onto a 1024×1024
 # Gruvbox background, writes the result back to resources/app-icon.png and
-# Gruvbox_landing/assets/app-icon.png, and rebuilds resources/app-icon.icns.
+# Gruvbox_landing/assets/app-icon.png (when present), landing/assets/ copies, and
+# rebuilds resources/app-icon.icns.
 # Prefer `scripts/sync-brand-icons-from-composer.sh` whenever `icon.icon` and
 # `ictool` are present so Liquid Glass composites stay accurate.
 
@@ -14,6 +15,7 @@ REPO="$(cd "$ROOT/.." && pwd)"
 SRC="$ROOT/resources/app-icon.png"
 DEST_PNG="$ROOT/resources/app-icon.png"
 LANDING_PNG="$REPO/Gruvbox_landing/assets/app-icon.png"
+STUDIO_LANDING_ASSETS="$ROOT/landing/assets"
 OUT_ICNS="$ROOT/resources/app-icon.icns"
 INNER_MAX="${INNER_MAX:-560}"
 PAD_COLOR="${PAD_COLOR:-1d2021}"
@@ -46,6 +48,11 @@ if [[ -d "$REPO/Gruvbox_landing" ]]; then
   mkdir -p "$(dirname "$LANDING_PNG")"
   cp "$MASTER" "$LANDING_PNG"
 fi
+if [[ -d "$STUDIO_LANDING_ASSETS" || -d "$ROOT/landing" ]]; then
+  mkdir -p "$STUDIO_LANDING_ASSETS"
+  cp "$MASTER" "$STUDIO_LANDING_ASSETS/app-icon.png"
+  cp "$MASTER" "$STUDIO_LANDING_ASSETS/app-icon-macos.png"
+fi
 
 ICONSET="$WORKDIR/AppIcon.iconset"
 mkdir -p "$ICONSET"
@@ -63,6 +70,8 @@ sips -z 1024 1024 "$MASTER" --out "$ICONSET/icon_512x512@2x.png" >/dev/null 2>&1
 iconutil -c icns "$ICONSET" -o "$OUT_ICNS"
 if [[ -d "$REPO/Gruvbox_landing" ]]; then
   echo "[build-macos-app-icon] Wrote $DEST_PNG, $LANDING_PNG, app-icon-macos.png, and $OUT_ICNS"
+elif [[ -d "$ROOT/landing" ]]; then
+  echo "[build-macos-app-icon] Wrote $DEST_PNG, $STUDIO_LANDING_ASSETS/app-icon.png, app-icon-macos.png, and $OUT_ICNS"
 else
-  echo "[build-macos-app-icon] Wrote $DEST_PNG, app-icon-macos.png, and $OUT_ICNS (no sibling Gruvbox_landing)"
+  echo "[build-macos-app-icon] Wrote $DEST_PNG, app-icon-macos.png, and $OUT_ICNS"
 fi

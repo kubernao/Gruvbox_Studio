@@ -150,10 +150,11 @@ Initialize submodules after clone. If Gruvie reports “Pi CLI not found”, run
 
 | Topic | Location |
 |-------|----------|
-| Gruvie / Pi troubleshooting | [docs/pi-integration-debug.md](docs/pi-integration-debug.md) |
-| Git UI and commands | [docs/git-README.md](docs/git-README.md) |
-| Diff viewer | [docs/DiffViewer-README.md](docs/DiffViewer-README.md) |
-| Editor contracts | [docs/editor/](docs/editor/) |
+| Documentation index | [docs/README.md](docs/README.md) |
+| Architecture | [docs/architecture.md](docs/architecture.md) |
+| Development workflow | [docs/development-workflow.md](docs/development-workflow.md) |
+| Testing guide | [docs/testing.md](docs/testing.md) |
+| Troubleshooting | [docs/troubleshooting.md](docs/troubleshooting.md) |
 
 ## Contributing
 

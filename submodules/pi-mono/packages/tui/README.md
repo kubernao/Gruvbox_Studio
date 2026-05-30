@@ -155,7 +155,7 @@ class MyInput implements Component, Focusable {
   render(width: number): string[] {
     const marker = this.focused ? CURSOR_MARKER : "";
     // Emit marker right before the fake cursor
-    return [`> ${beforeCursor}${marker}\x1b[7m${atCursor}\x1b[27m${afterCursor}`];
+    return [`> ${beforeCursor}${marker}\x1b[4m${atCursor}\x1b[24m${afterCursor}`];
   }
 }
 ```
