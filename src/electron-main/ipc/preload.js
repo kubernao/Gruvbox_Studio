@@ -33,6 +33,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   showOpenDialog: (options) => invokeContract('showOpenDialog', options),
   pickExplorerSavePath: (payload) => invokeContract('pickExplorerSavePath', payload),
   confirmExplorerDelete: (payload) => invokeContract('confirmExplorerDelete', payload),
+  confirmUnsavedClose: (payload) => invokeContract('confirmUnsavedClose', payload),
 
   // Listen for file events from the main process
   onFileEvent: (callback) => ipcRenderer.on(IPC_EVENT_CHANNELS.fileEvent, (event, data) => callback(data)),
@@ -67,6 +68,18 @@ contextBridge.exposeInMainWorld('electronAPI', {
     const wrapped = (_event, payload) => {
       callback(payload);
     };
+    ipcRenderer.on(channel, wrapped);
+    return () => {
+      ipcRenderer.removeListener(channel, wrapped);
+    };
+  },
+
+  onMenuPaletteAction: (callback) => {
+    if (typeof callback !== 'function') {
+      return () => {};
+    }
+    const channel = IPC_EVENT_CHANNELS.menuPaletteAction;
+    const wrapped = (_event, payload) => callback(payload);
     ipcRenderer.on(channel, wrapped);
     return () => {
       ipcRenderer.removeListener(channel, wrapped);

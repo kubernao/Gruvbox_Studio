@@ -40,6 +40,7 @@ const IPC_EVENT_CHANNELS = Object.freeze({
   piChatToolEnd: 'pi-chat-tool-end',
   piExtensionUi: 'pi-extension-ui',
   audiobookExportProgress: 'audiobook-export-progress',
+  menuPaletteAction: 'menu-palette-action',
 });
 
 module.exports = {

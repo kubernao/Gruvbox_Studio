@@ -76,6 +76,7 @@ export function buildCuratedPaletteItems(options: CuratedPaletteBuildOptions): P
       id: 'editor-new-markdown',
       label: 'New Markdown file',
       detail: 'File Explorer',
+      shortcut: modShortcut('N'),
       searchText: 'new markdown file create md',
       disabled: !workspaceOpen,
       run: () => {
@@ -91,6 +92,39 @@ export function buildCuratedPaletteItems(options: CuratedPaletteBuildOptions): P
       disabled: !prereqs.editorCanSave,
       run: () => {
         dispatchPaletteAction({ kind: 'editor.save' });
+      },
+    },
+    {
+      id: 'editor-save-as',
+      label: 'Save active file as…',
+      detail: 'Editor',
+      shortcut: `${isDarwin() ? 'Cmd' : 'Ctrl'}+Shift+S`,
+      searchText: 'save as file editor retarget path',
+      disabled: !prereqs.editorCanSave,
+      run: () => {
+        dispatchPaletteAction({ kind: 'editor.saveAs' });
+      },
+    },
+    {
+      id: 'editor-close-tab',
+      label: 'Close active tab',
+      detail: 'Editor',
+      shortcut: modShortcut('W'),
+      searchText: 'close tab editor document',
+      disabled: !prereqs.editorCanExportFile,
+      run: () => {
+        dispatchPaletteAction({ kind: 'editor.closeTab' });
+      },
+    },
+    {
+      id: 'editor-quick-open',
+      label: 'Go to file…',
+      detail: 'File Explorer',
+      shortcut: modShortcut('P'),
+      searchText: 'go to file quick open workspace finder',
+      disabled: !workspaceOpen,
+      run: () => {
+        dispatchPaletteAction({ kind: 'editor.quickOpen' });
       },
     },
     {

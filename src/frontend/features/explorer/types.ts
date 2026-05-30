@@ -44,6 +44,8 @@ export interface FileExplorerContextType extends FileExplorerState {
   renameViaSaveDialog: (sourcePath: string) => Promise<string | null>;
   movePath: (sourcePath: string, targetDirectoryPath: string) => Promise<string>;
   deletePath: (targetPath: string, isDirectory: boolean) => Promise<void>;
+  /** Expands ancestor folders so `targetPath` is visible in the tree. */
+  revealFileInTree: (targetPath: string) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
 }

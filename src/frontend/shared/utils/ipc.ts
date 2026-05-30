@@ -54,6 +54,7 @@ declare global {
       showOpenDialog: (options?: any) => Promise<{ canceled: boolean; filePaths: string[] }>;
       pickExplorerSavePath: (payload: PickExplorerSavePathPayload) => Promise<PickExplorerSavePathResult>;
       confirmExplorerDelete: (payload: ConfirmExplorerDeletePayload) => Promise<{ ok: boolean }>;
+      confirmUnsavedClose: (payload: ConfirmUnsavedClosePayload) => Promise<ConfirmUnsavedCloseResult>;
       onFileEvent: (callback: (event: FileEvent) => void) => void;
       onWatcherError: (callback: (error: IPCError) => void) => void;
       removeFileEventListener: () => void;
@@ -73,6 +74,7 @@ declare global {
       onAudiobookExportProgress?: (
         callback: (payload: AudiobookExportProgressPayload) => void,
       ) => () => void;
+      onMenuPaletteAction?: (callback: (payload: { kind?: string }) => void) => () => void;
       subscribePiChat?: (handlers: {
         onChunk?: (chunk: PiChatChunkPayload) => void;
         onStreamEnd?: (payload: PiChatStreamEndPayload) => void;
@@ -170,7 +172,7 @@ export interface WatcherStatus {
 }
 
 /** Intent passed to the main-process save dialog for explorer create/rename flows. */
-export type ExplorerSavePickIntent = 'new-file' | 'new-folder' | 'rename';
+export type ExplorerSavePickIntent = 'new-file' | 'new-folder' | 'rename' | 'save-as';
 
 /** Payload for {@link IPCService.pickExplorerSavePath}: chooses default path and dialog title. */
 export interface PickExplorerSavePathPayload {
@@ -190,6 +192,16 @@ export interface ConfirmExplorerDeletePayload {
   message: string;
   detail?: string;
 }
+
+/** Labels for unsaved-close confirmation when closing a document tab. */
+export interface ConfirmUnsavedClosePayload {
+  message: string;
+  detail?: string;
+}
+
+export type ConfirmUnsavedCloseResult = {
+  choice: 'save' | 'discard' | 'cancel';
+};
 
 export interface EditorExportPayload {
   format: 'html' | 'pdf' | 'docx';
@@ -521,6 +533,28 @@ export class IPCService {
       return { ok: (result as { ok: boolean }).ok };
     } catch (error) {
       throw this.mapError(error, 'Failed to show delete confirmation');
+    }
+  }
+
+  static async confirmUnsavedClose(payload: ConfirmUnsavedClosePayload): Promise<ConfirmUnsavedCloseResult> {
+    const api = this.ensureAPI();
+    if (!api.confirmUnsavedClose) {
+      return { choice: 'cancel' };
+    }
+    try {
+      const result: unknown = await api.confirmUnsavedClose(payload);
+      if (
+        !result ||
+        typeof result !== 'object' ||
+        (result as { choice?: unknown }).choice !== 'save' &&
+          (result as { choice?: unknown }).choice !== 'discard' &&
+          (result as { choice?: unknown }).choice !== 'cancel'
+      ) {
+        return { choice: 'cancel' };
+      }
+      return { choice: (result as ConfirmUnsavedCloseResult).choice };
+    } catch (error) {
+      throw this.mapError(error, 'Failed to show unsaved changes confirmation');
     }
   }
 

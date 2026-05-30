@@ -11,6 +11,10 @@ export const PALETTE_ACTION_EVENT = 'app:palette-action';
 
 export type PaletteAction =
   | { kind: 'editor.save' }
+  | { kind: 'editor.saveAs' }
+  | { kind: 'editor.closeTab' }
+  | { kind: 'editor.openFolder' }
+  | { kind: 'editor.quickOpen' }
   | { kind: 'editor.newMarkdown' }
   | { kind: 'editor.undo' }
   | { kind: 'editor.redo' }

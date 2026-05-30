@@ -4,6 +4,8 @@ import { IPCService, FileInfo } from '../../shared/utils/ipc';
 import { fileNameFromPath } from '../../shared/utils/pathParts';
 import { hasPathSeparator, isSamePath, isSelfOrDescendantPath } from './pathValidation';
 import { useToast } from '../../shared/hooks/useToast';
+import { recordRecentWorkspace } from '../editor/recentWorkspaces';
+import { dispatchDocumentRepoint, dispatchFileDeleted } from '../editor/workspaceFileOpsEvents';
 
 export const FileExplorerContext = createContext<FileExplorerContextType | undefined>(undefined);
 
@@ -121,6 +123,7 @@ export const FileExplorerProvider: React.FC<FileExplorerProviderProps> = ({ chil
       setFileTree(tree);
       setSelectedFileState(null);
       setSelectedFileVersion((current) => current + 1);
+      recordRecentWorkspace(path);
       // Fire-and-forget: warn about any stuck git operation so the user can
       // resolve it before the next AI turn runs. Never blocks project load.
       void warnIfStuckGitOperation(path, showWarning);
@@ -142,6 +145,15 @@ export const FileExplorerProvider: React.FC<FileExplorerProviderProps> = ({ chil
     setFileTree((prevTree) => {
       if (!prevTree) return null;
       return toggleNodeExpanded(prevTree, path);
+    });
+  }, []);
+
+  const revealFileInTree = useCallback((targetPath: string) => {
+    setFileTree((prevTree) => {
+      if (!prevTree) {
+        return null;
+      }
+      return expandAncestorsForPath(prevTree, targetPath);
     });
   }, []);
 
@@ -219,6 +231,7 @@ export const FileExplorerProvider: React.FC<FileExplorerProviderProps> = ({ chil
         return null;
       }
       await IPCService.renamePath(sourcePath, pick.filePath);
+      dispatchDocumentRepoint(sourcePath, pick.filePath);
       const rootMoved = await syncExplorerRootAfterRootEntryMoved(rootPath, sourcePath, pick.filePath, setRootPath);
       if (!rootMoved) {
         await refreshFileTree();
@@ -241,6 +254,7 @@ export const FileExplorerProvider: React.FC<FileExplorerProviderProps> = ({ chil
       }
       const targetPath = buildSiblingPath(sourcePath, sanitizedName);
       await IPCService.renamePath(sourcePath, targetPath);
+      dispatchDocumentRepoint(sourcePath, targetPath);
       const rootMoved = await syncExplorerRootAfterRootEntryMoved(rootPath, sourcePath, targetPath, setRootPath);
       if (!rootMoved) {
         await refreshFileTree();
@@ -272,6 +286,7 @@ export const FileExplorerProvider: React.FC<FileExplorerProviderProps> = ({ chil
         setSelectedFileVersion((version) => version + 1);
         throw error;
       }
+      dispatchDocumentRepoint(sourcePath, targetPath);
       const rootMoved = await syncExplorerRootAfterRootEntryMoved(rootPath, sourcePath, targetPath, setRootPath);
       if (!rootMoved) {
         await refreshFileTree();
@@ -289,6 +304,7 @@ export const FileExplorerProvider: React.FC<FileExplorerProviderProps> = ({ chil
         await IPCService.deleteDirectory(targetPath);
       } else {
         await IPCService.deleteFile(targetPath);
+        dispatchFileDeleted(targetPath);
         setSelectedFileState((current) => (current === targetPath ? null : current));
         setSelectedFileVersion((version) => version + 1);
       }
@@ -325,6 +341,7 @@ export const FileExplorerProvider: React.FC<FileExplorerProviderProps> = ({ chil
     renameViaSaveDialog,
     movePath,
     deletePath,
+    revealFileInTree,
     setLoading,
     setError,
   };
@@ -335,6 +352,24 @@ export const FileExplorerProvider: React.FC<FileExplorerProviderProps> = ({ chil
     </FileExplorerContext.Provider>
   );
 };
+
+function expandAncestorsForPath(node: FileTreeNode, targetPath: string): FileTreeNode {
+  const normalize = (value: string) => value.replace(/\\/g, '/');
+  const target = normalize(targetPath);
+  const nodePath = normalize(node.path);
+  if (target !== nodePath && !target.startsWith(`${nodePath}/`)) {
+    return node;
+  }
+  if (!node.isDirectory) {
+    return node;
+  }
+  const children = node.children?.map((child) => expandAncestorsForPath(child, targetPath));
+  return {
+    ...node,
+    isExpanded: target !== nodePath ? true : node.isExpanded,
+    children,
+  };
+}
 
 function toggleNodeExpanded(node: FileTreeNode, targetPath: string): FileTreeNode {
   if (node.path === targetPath) {
